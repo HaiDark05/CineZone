@@ -5,8 +5,10 @@ import ModalChoose from './ModalChoose';
 import { ContextCategories } from '../../../../context/CategoryProvider';
 import { ContextActors } from '../../../../context/ActorsProvider';
 import { ContextCharacters } from '../../../../context/CharacterProvider';
+import TableMovie from './TableMovie';
+import { logos } from '../../../../utils/Containts';
 
-const inner = { name: "", id_author: "", imgUrl: "", listCate: [], listActor: [], listCharacter: [], description: "", creatAt: new Date, likeCount: 0, duration: "", urlTrailer: "" }
+const inner = { name: "", id_author: "", imgUrl: logos, listCate: [], listActor: [], listCharacter: [], description: "", creatAt: new Date, likeCount: 0, duration: "", urlTrailer: "" }
 function Movie(props) {
     const [movie, setMovie] = useState(inner);
     const { categories } = useContext(ContextCategories);
@@ -27,8 +29,15 @@ function Movie(props) {
         handleOpen();
     }
 
-    console.log(movie);
-    
+    const [errors, setErrors] = useState(inner);
+        const validation = () => {
+            const newErrors = {};
+            newErrors.name = movie.name ? "" : "Vui long nhap name";
+            newErrors.description = movie.description ? "" : "vui long nhap descriptions";
+            setErrors(newErrors);
+            return Object.values(newErrors).every(e => e == "");
+        }
+
     const handleModalChoose = (value) => {
         setChoose(true);
         setTypeChoose(value);
@@ -86,7 +95,10 @@ function Movie(props) {
     return (
         <>
             <BoxSearch addItem={addItem} title={"Movies"} nameBtn={"Movie"} />
-            <ModalMovie open={open} handleClose={handleClose} handleOpened={handleOpened} handleModalChoose={handleModalChoose} setMovie={setMovie} movie={movie}/>
+            <div className="p-3 m-auto">
+                <TableMovie movie={movie} setMovie={setMovie}/>
+            </div>
+            <ModalMovie open={open} handleClose={handleClose} handleOpened={handleOpened} handleModalChoose={handleModalChoose} setMovie={setMovie} movie={movie} validation={validation} errors={errors} />
             <ModalChoose getSelectedItems={getSelectedItems()} handleSelect={handleSelect} choose={choose} handleClosed={handleClosed} dataChoose={dataChoose} typeChoose={typeChoose} />
         </>
     );

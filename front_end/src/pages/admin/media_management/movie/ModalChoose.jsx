@@ -19,15 +19,15 @@ const Item = styled(Paper)(({ theme }) => ({
     }),
 }));
 
-function ModalChoose({ choose, handleClosed, dataChoose, typeChoose, handleSelect, getSelectedItems}) {
- 
+function ModalChoose({ choose, handleClosed, dataChoose, typeChoose, handleSelect, getSelectedItems }) {
+
     const [searchObject, setSearchObject] = useState('');
     const isSelected = (item) => getSelectedItems.includes(item);
 
-    const filtereddata = dataChoose.filter( element =>
+    const filtereddata = dataChoose.filter(element =>
         element.name.toLowerCase().includes(searchObject.toLowerCase())
     );
-    
+
     return (
         <div>
             <Dialog open={choose} onClose={handleClosed} PaperProps={{
@@ -46,7 +46,7 @@ function ModalChoose({ choose, handleClosed, dataChoose, typeChoose, handleSelec
                             size="small"
                             placeholder="Enter keywords..."
                             value={searchObject}
-                            onChange={(e) =>setSearchObject(e.target.value)}
+                            onChange={(e) => setSearchObject(e.target.value)}
                             InputProps={{
                                 startAdornment: (
                                     <InputAdornment position="start">
@@ -62,29 +62,27 @@ function ModalChoose({ choose, handleClosed, dataChoose, typeChoose, handleSelec
                         <div className="flex gap-3 mt-3 flex-wrap">
                             {filtereddata?.map((element, index) => (
                                 typeChoose == "categories" ?
-                                    <button className={`text-white rounded-lg p-2 ${isSelected(element.id) ? "bg-fuchsia-700" :"bg-orange-700" }`} onClick={() => handleSelect(element.id,typeChoose)} key={index}>
+                                    <button className={`text-white rounded-lg p-2 ${isSelected(element.id) ? "bg-fuchsia-700" : "bg-orange-700"}`} onClick={() => handleSelect(element.id, typeChoose)} key={index}>
                                         {element.name}
                                     </button> :
-                                    <div  
-                                    onClick={() => handleSelect(element.id, typeChoose)} 
-                                    key={index} 
-                                    className={`flex flex-col items-center cursor-pointer ${
-                                        isSelected(element.id) 
-                                            ? "text-purple-500" 
-                                            : "text-slate-700"
-                                    }`}
-                                >
-                                    <img 
-                                        className={`h-20 w-20 rounded-full border-4 ${
-                                            isSelected(element.id) 
-                                                ? " border-purple-500" 
-                                                : "border-white"
-                                        }`} 
-                                        src={element.imgUrl} 
-                                        alt="" 
-                                    />
-                                    <span>{element.name}</span>
-                                </div>                                
+                                    <div
+                                        onClick={() => handleSelect(element.id, typeChoose)}
+                                        key={index}
+                                        className={`flex flex-col items-center cursor-pointer ${isSelected(element.id)
+                                                ? "text-purple-500"
+                                                : "text-slate-700"
+                                            }`}
+                                    >
+                                        <img
+                                            className={`h-20 w-20 rounded-full border-4 ${isSelected(element.id)
+                                                    ? " border-purple-500"
+                                                    : "border-white"
+                                                }`}
+                                            src={element.imgUrl}
+                                            alt=""
+                                        />
+                                        <span>{element.name}</span>
+                                    </div>
                             ))}
                         </div>
                     </Item>

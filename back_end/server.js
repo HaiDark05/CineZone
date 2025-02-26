@@ -5,6 +5,7 @@ const actorRoutes = require("./routes/actorRoutes");
 const authorRoutes = require("./routes/authorRoutes");
 const characterRoutes = require("./routes/characterRoutes")
 const locationRoutes = require("./routes/locationRoutes")
+const movieRoutes = require("./routes/movieRoutes")
 
 const app = express();
 app.use(cors());
@@ -15,6 +16,7 @@ app.use("/api/actors", actorRoutes);
 app.use("/api/authors", authorRoutes);
 app.use("/api/characters",characterRoutes);
 app.use("/api/location",locationRoutes);
+app.use("/api/movies",movieRoutes);
 
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {

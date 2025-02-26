@@ -10,6 +10,7 @@ import ActorsProvider from './context/ActorsProvider';
 import AuthorsProvider from './context/AuthorsProvider';
 import CharacterProvider from './context/CharacterProvider';
 import LocationProvider from './context/LocationProvider';
+import MovieProvider from './context/MovieProvider';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -21,7 +22,9 @@ root.render(
             <AuthorsProvider>
               <CharacterProvider>
                 <LocationProvider>
-                  <App />
+                  <MovieProvider>
+                    <App />
+                  </MovieProvider>
                 </LocationProvider>
               </CharacterProvider>
             </AuthorsProvider>

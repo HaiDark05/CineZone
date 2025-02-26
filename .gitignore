@@ -1,0 +1,5 @@
+# Bỏ qua node_modules
+front_end/node_modules
+back_end/node_modules
+# Bỏ qua file môi trường
+*.env

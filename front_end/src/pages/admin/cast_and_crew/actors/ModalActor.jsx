@@ -29,18 +29,18 @@ function ModalActor({ open, handleClose, actor, setActor, validation, errors }) 
             if (!validation()) {
                 return;
             }
-    
+
             // Upload ảnh lên Cloudinary
             const imgLoading = await uploadImageToCloudinary(actor.imgUrl, "actors");
-    
+
             if (!imgLoading) {
                 showNotification("Failed to upload image!", "error");
                 return;
             }
-    
+
             // Tạo object actor mới với ảnh đã upload
             const updatedActor = { ...actor, imgUrl: imgLoading };
-    
+
             // Gửi request API
             if (actor.id) {
                 await axios.put(`http://localhost:8080/api/actors/${actor.id}`, updatedActor);
@@ -49,16 +49,16 @@ function ModalActor({ open, handleClose, actor, setActor, validation, errors }) 
                 await axios.post("http://localhost:8080/api/actors", updatedActor);
                 showNotification("Actor added successfully!", "success");
             }
-    
+
             handleClose(); // Đóng modal
             setUpdate((prev) => !prev); // Cập nhật lại state để load lại dữ liệu
-    
+
         } catch (error) {
             console.error("Error submitting actor:", error);
             showNotification("Error submitting actor!", "error");
         }
     };
-    
+
 
     const handleChange = (event) => {
         const { name, value } = event.target;
@@ -72,7 +72,7 @@ function ModalActor({ open, handleClose, actor, setActor, validation, errors }) 
         if (file) {
             const reader = new FileReader();
             reader.onloadend = () => {
-               setActor({...actor, imgUrl : reader.result})
+                setActor({ ...actor, imgUrl: reader.result })
             };
             reader.readAsDataURL(file);
         }
