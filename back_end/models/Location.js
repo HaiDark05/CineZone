@@ -1,22 +1,22 @@
 class Location {
-    constructor(id, imgUrl, name, description) {
+    constructor(id, name, description, id_region) {
       this.id = id;
-      this.imgUrl = imgUrl
       this.name = name;
       this.description = description;
+      this.id_region = id_region;
     }
   
     toFirestore() {
       return {
-        imgUrl: this.imgUrl,
         name: this.name,
         description: this.description,
+        id_region: this.id_region,
       };
     }
   
     static fromFirestore(doc) {
       const data = doc.data();
-      return new Location(doc.id, data.imgUrl, data.name, data.description);
+      return new Location(doc.id, data.name, data.description, data.id_region);
     }
   }
  module.exports =  Location;

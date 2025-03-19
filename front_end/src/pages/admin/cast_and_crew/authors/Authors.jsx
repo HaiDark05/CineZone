@@ -9,12 +9,14 @@ function Authors(props) {
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
     const [searchObject, setSearchObject] = useState('');
+    const [author, setAuthor] = useState(inner);
+    const [errors, setErrors] = useState(inner);
+    
     const addItem = () => {
         handleOpen();
         setAuthor(inner);
+        setErrors(inner);
     }
-    const [author, setAuthor] = useState(inner);
-    const [errors, setErrors] = useState(inner);
     const validation = () => {
         const newErrors = {};
         newErrors.name = author.name ? "" : "Vui long nhap name";

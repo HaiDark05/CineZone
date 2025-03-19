@@ -9,7 +9,7 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { FaPencilAlt } from "react-icons/fa";
 import { FaTrash } from "react-icons/fa";
-import { Button, TablePagination } from '@mui/material';
+import { Button, TablePagination, Tooltip } from '@mui/material';
 import { ContextAuthors } from '../../../../context/AuthorsProvider';
 import ModalDelete from '../../../../components/ModalDelete';
 
@@ -64,32 +64,38 @@ function TableAuthor({ setOpen, setAuthor, searchObject }) {
                                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                             >
                                 <TableCell component="th" scope="row" align="center">
-                                {index + 1 + page * rowsPerPage}
+                                    {index + 1 + page * rowsPerPage}
                                 </TableCell>
                                 <TableCell component="th" scope="row" align="center">
                                     {row.name}
                                 </TableCell>
-                                <TableCell align="center">{row.description}</TableCell>
+                                <TableCell align="center" sx={{ maxWidth: 150, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                                    <Tooltip title={row.description} arrow>
+                                        <span>{row.description.length > 50 ? row.description.slice(0, 50) + "..." : row.description}</span>
+                                    </Tooltip>
+                                </TableCell>
                                 <TableCell align="center">
-                                    <Button
-                                        onClick={() => { setOpen(true); setAuthor(row) }}
-                                        sx={{
-                                            backgroundColor: 'blue', // Màu nền của nút
-                                            '&:hover': {
-                                                backgroundColor: '#FFD700' // Màu nền khi hover
-                                            }
-                                        }} variant="contained"><FaPencilAlt /></Button>
-                                    <Button
-                                        onClick={() => {
-                                            setOpenDeleted(true); setIdDeleted(row.id);
-                                        }}
-                                        sx={{
-                                            marginLeft: "10px",
-                                            backgroundColor: 'red', // Màu nền của nút
-                                            '&:hover': {
-                                                backgroundColor: 'darkred' // Màu nền khi hover
-                                            }
-                                        }} variant="contained"><FaTrash /></Button>
+                                    <div className="flex justify-center items-center">
+                                        <Button
+                                            onClick={() => { setOpen(true); setAuthor(row) }}
+                                            sx={{
+                                                backgroundColor: 'blue', // Màu nền của nút
+                                                '&:hover': {
+                                                    backgroundColor: '#FFD700' // Màu nền khi hover
+                                                }
+                                            }} variant="contained"><FaPencilAlt /></Button>
+                                        <Button
+                                            onClick={() => {
+                                                setOpenDeleted(true); setIdDeleted(row.id);
+                                            }}
+                                            sx={{
+                                                marginLeft: "10px",
+                                                backgroundColor: 'red', // Màu nền của nút
+                                                '&:hover': {
+                                                    backgroundColor: 'darkred' // Màu nền khi hover
+                                                }
+                                            }} variant="contained"><FaTrash /></Button>
+                                    </div>
                                 </TableCell>
                             </TableRow>
                         ))}

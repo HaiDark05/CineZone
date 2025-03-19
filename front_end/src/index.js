@@ -11,6 +11,13 @@ import AuthorsProvider from './context/AuthorsProvider';
 import CharacterProvider from './context/CharacterProvider';
 import LocationProvider from './context/LocationProvider';
 import MovieProvider from './context/MovieProvider';
+import TypeChairsProvider from './context/TypeChairsProvider';
+import ChairsProvider from './context/ChairsProvider';
+import CinemasProvider from './context/CinemasProvider';
+import RegionsProvider from './context/RegionsProvider';
+import FoodProvider from './context/FoodProvider';
+import RoomsProvider from './context/RoomsProvider';
+import MovieScreenProvider from './context/MovieScreenProvider';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -23,7 +30,21 @@ root.render(
               <CharacterProvider>
                 <LocationProvider>
                   <MovieProvider>
-                    <App />
+                    <TypeChairsProvider>
+                      <ChairsProvider>
+                        <CinemasProvider>
+                          <RegionsProvider>
+                            <FoodProvider>
+                              <RoomsProvider>
+                                <MovieScreenProvider>
+                                  <App />
+                                </MovieScreenProvider>
+                              </RoomsProvider>
+                            </FoodProvider>
+                          </RegionsProvider>
+                        </CinemasProvider>
+                      </ChairsProvider>
+                    </TypeChairsProvider>
                   </MovieProvider>
                 </LocationProvider>
               </CharacterProvider>

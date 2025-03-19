@@ -35,7 +35,7 @@ const Item = styled(Paper)(({ theme }) => ({
     }),
 }));
 
-function ModalMovie({ open, handleClose, handleModalChoose, setMovie, movie, validation, errors }) {
+function ModalMovie({ open, handleClose, handleModalChoose, setMovie, movie, validation, errors, handleSelect }) {
     const { authors } = useContext(ContextAuthors);
     const { categories } = useContext(ContextCategories);
     const { actors } = useContext(ContextActors);
@@ -97,11 +97,6 @@ function ModalMovie({ open, handleClose, handleModalChoose, setMovie, movie, val
         }));
     }
 
-    const handleDurationChange = (event) => {
-        let value = Number(event.target.value); // Chuyển thành số
-        if (value < 0) value = 0; // Nếu là số âm, đặt lại thành 0
-        setMovie((prev) => ({ ...prev, duration: value }));
-    };
     return (
         <div className="">
             <Dialog open={open} onClose={handleClose} PaperProps={{
@@ -112,7 +107,7 @@ function ModalMovie({ open, handleClose, handleModalChoose, setMovie, movie, val
                     p: 2,
                 },
             }}>
-                <DialogTitle>Add Movie</DialogTitle>
+                <DialogTitle>{movie.id ? "Update movie" : "Add movie"}</DialogTitle>
                 <DialogContent>
                     <Grid container spacing={2}>
                         <Grid item xs={12} md={6}>
@@ -134,6 +129,8 @@ function ModalMovie({ open, handleClose, handleModalChoose, setMovie, movie, val
                                     margin="dense"
                                     name="urlTrailer"
                                     value={movie.urlTrailer}
+                                    error={!!errors.urlTrailer}
+                                    helperText={errors.urlTrailer}
                                     onChange={handleChange}
                                 />
                                 <TextField
@@ -143,11 +140,11 @@ function ModalMovie({ open, handleClose, handleModalChoose, setMovie, movie, val
                                     margin="dense"
                                     name="duration"
                                     type="number"
-                                    value={movie?.duration || ""}
-                                    onChange={handleDurationChange} // Gọi hàm riêng
+                                    value={movie?.duration}
+                                    onChange={handleChange} // Gọi hàm riêng
                                     inputProps={{ min: 0 }}
-                                    error={!!errors.name}
-                                    helperText={errors.name}
+                                    error={!!errors.duration}
+                                    helperText={errors.duration}
                                 />
 
                                 <Autocomplete
@@ -161,10 +158,10 @@ function ModalMovie({ open, handleClose, handleModalChoose, setMovie, movie, val
                                         }));
                                     }}
                                     renderInput={(params) => (
-                                        <TextField {...params} label="Select Author" variant="outlined" fullWidth margin="dense" />
+                                        <TextField {...params} label="Select Author" variant="outlined" fullWidth margin="dense" error={!!errors.id_author}
+                                            helperText={errors.id_author} />
                                     )}
-                                    error={!!errors.name}
-                                    helperText={errors.name}
+
                                 />
                                 <TextField
                                     label="Description"
@@ -176,20 +173,23 @@ function ModalMovie({ open, handleClose, handleModalChoose, setMovie, movie, val
                                     onChange={handleChange}
                                     rows={3}
                                     multiline
-                                    error={!!errors.name}
-                                    helperText={errors.name}
+                                    error={!!errors.description}
+                                    helperText={errors.description}
                                 />
                             </Item>
                         </Grid>
                         <Grid item xs={12} md={6}>
                             <Item>
-                                <h1 className="flex items-center gap-1 text-indigo-600 cursor-pointer">Categories <BiSolidCategory onClick={() => handleModalChoose("categories")} /></h1>
+                                <h1 className="flex items-center gap-1 text-indigo-600 cursor-pointer">Categories 
+                                    <BiSolidCategory onClick={() => handleModalChoose("categories")} />
+                                    {errors.cate  && <p className="text-red-600">{errors.cate}</p> }
+                                </h1>
                                 <div className="flex gap-3 mt-3 flex-wrap">
                                     {movie.listCate.map((element, index) => (
                                         <button key={index} className="relative p-2 bg-fuchsia-600 text-white rounded-md">
                                             {getOjectById(categories, element)?.name}
-                                            <div className="absolute top-0 left-0 -translate-x-1/2 -translate-y-1/2 w-6 h-6 flex items-center justify-center rounded-full bg-white">
-                                                <IoIosTrash className="text-red-500 text-sm" />
+                                            <div className="absolute top-1 left-1 -translate-x-1/2 -translate-y-1/2 w-5 h-5 flex items-center justify-center rounded-full bg-white">
+                                                <IoIosTrash onClick={() => handleSelect(element, "categories")} className="text-red-500 text-sm"/>                     
                                             </div>
                                         </button>
                                     ))}
@@ -199,8 +199,8 @@ function ModalMovie({ open, handleClose, handleModalChoose, setMovie, movie, val
                                     {movie.listActor.map((element, index) => (
                                         <div className="relative" key={index}>
                                             <img className="h-16 w-16 rounded-full" src={getOjectById(actors, element)?.imgUrl} alt="" />
-                                            <div className="absolute top-0 left-0 translate-x-0 translate-y-0 w-6 h-6 flex items-center justify-center rounded-full bg-white">
-                                                <IoIosTrash className="text-red-500 text-sm" />
+                                            <div className="absolute top-1 left-1 translate-x-0 translate-y-0 w-5 h-5 flex items-center justify-center rounded-full bg-white">
+                                                <IoIosTrash onClick={() => handleSelect(element, "actors")} className="text-red-500 text-sm" />
                                             </div>
                                         </div>
                                     ))}
@@ -210,8 +210,8 @@ function ModalMovie({ open, handleClose, handleModalChoose, setMovie, movie, val
                                     {movie.listCharacter.map((element, index) => (
                                         <div className="relative" key={index}>
                                             <img className="h-16 w-16 rounded-full" src={getOjectById(characters, element)?.imgUrl} alt="" />
-                                            <div className="absolute top-0 left-0 translate-x-0 translate-y-0 w-6 h-6 flex items-center justify-center rounded-full bg-white">
-                                                <IoIosTrash className="text-red-500 text-sm" />
+                                            <div className="absolute top-1 left-1 translate-x-0 translate-y-0 w-5 h-5 flex items-center justify-center rounded-full bg-white">
+                                                <IoIosTrash onClick={() => handleSelect(element, "characters")} className="text-red-500 text-sm" />
                                             </div>
                                         </div>
                                     ))}
@@ -249,7 +249,7 @@ function ModalMovie({ open, handleClose, handleModalChoose, setMovie, movie, val
                         Cancel
                     </Button>
                     <Button onClick={handleSubmit} color="primary">
-                        Yes
+                        submit
                     </Button>
                 </DialogActions>
             </Dialog>

@@ -28,9 +28,9 @@ const getLocationById = async (req, res) => {
 // Thêm Location mới
 const addLocation = async (req, res) => {
   try {
-    const {imgUrl, name, description } = req.body;
+    const {name, description, id_region } = req.body;
     const docRef = locationCollection.doc();
-    const location = new Location(docRef.id, imgUrl, name, description);
+    const location = new Location(docRef.id, name, description, id_region);
     await docRef.set(location.toFirestore());
     res.status(201).json({ message: "Location added", location });
   } catch (error) {
@@ -41,8 +41,8 @@ const addLocation = async (req, res) => {
 // Cập nhật location
 const updateLocation = async (req, res) => {
   try {
-    const {imgUrl, name, description } = req.body;
-    await locationCollection.doc(req.params.id).update({ imgUrl, name, description });
+    const {name, description, id_region } = req.body;
+    await locationCollection.doc(req.params.id).update({ name, description, id_region });
     res.json({ message: "Location updated" });
   } catch (error) {
     res.status(500).json({ error: error.message });

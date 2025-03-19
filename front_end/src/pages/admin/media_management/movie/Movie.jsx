@@ -17,26 +17,32 @@ function Movie(props) {
     const [dataChoose, setDatachoose] = useState([]);
     const [typeChoose, setTypeChoose] = useState("");
     const [open, setOpen] = useState(false);
-    const handleOpen = () => setOpen(true);
-    const handleClose = () => setOpen(false);
-
-
+    const [errors, setErrors] = useState(inner);
+    const [searchObject, setSearchObject] = useState('');
     const [choose, setChoose] = useState(false);
+    const handleClose = () => setOpen(false);
     const handleOpened = () => setChoose(true);
     const handleClosed = () => setChoose(false);
-
+    
     const addItem = () => {
         handleOpen();
     }
-
-    const [errors, setErrors] = useState(inner);
-        const validation = () => {
-            const newErrors = {};
-            newErrors.name = movie.name ? "" : "Vui long nhap name";
-            newErrors.description = movie.description ? "" : "vui long nhap descriptions";
-            setErrors(newErrors);
-            return Object.values(newErrors).every(e => e == "");
-        }
+    const handleOpen = () => {
+        setOpen(true);
+        setMovie(inner);
+        setErrors(inner);
+    };
+    const validation = () => {
+        const newErrors = {};
+        newErrors.name = movie.name ? "" : "Please enter name";
+        newErrors.description = movie.description ? "" : "Please enter descriptions";
+        newErrors.urlTrailer = movie.urlTrailer ? "" : "Please enter Url Trailer";
+        newErrors.duration = movie.duration ? "" : "Please enter the number of minutes";
+        newErrors.id_author = movie.id_author ? "" : "Please enter Author";
+        newErrors.cate = movie.listCate.length > 0 ? "" : "Please enter also one category";
+        setErrors(newErrors);
+        return Object.values(newErrors).every(e => e == "");
+    }
 
     const handleModalChoose = (value) => {
         setChoose(true);
@@ -94,11 +100,11 @@ function Movie(props) {
 
     return (
         <>
-            <BoxSearch addItem={addItem} title={"Movies"} nameBtn={"Movie"} />
+            <BoxSearch addItem={addItem} title={"Movies"} nameBtn={"Movie"} setSearchObject={setSearchObject} />
             <div className="p-3 m-auto">
-                <TableMovie movie={movie} setMovie={setMovie}/>
+                <TableMovie movie={movie} setMovie={setMovie} searchObject={searchObject} setSearchObject={setSearchObject} setOpen={setOpen} />
             </div>
-            <ModalMovie open={open} handleClose={handleClose} handleOpened={handleOpened} handleModalChoose={handleModalChoose} setMovie={setMovie} movie={movie} validation={validation} errors={errors} />
+            <ModalMovie handleSelect={handleSelect} open={open} handleClose={handleClose} handleOpened={handleOpened} handleModalChoose={handleModalChoose} setMovie={setMovie} movie={movie} validation={validation} errors={errors} />
             <ModalChoose getSelectedItems={getSelectedItems()} handleSelect={handleSelect} choose={choose} handleClosed={handleClosed} dataChoose={dataChoose} typeChoose={typeChoose} />
         </>
     );

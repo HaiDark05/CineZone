@@ -15,6 +15,7 @@ import TypeChairs from '../pages/admin/seating/type_chairs/TypeChairs';
 import OrderDetails from '../pages/admin/service/order_details/OrderDetails';
 import Tickets from '../pages/admin/service/tickets/Tickets';
 import Food from '../pages/admin/service/food/Food';
+import Regions from '../pages/admin/region/regions/Regions';
 
 
 
@@ -48,6 +49,10 @@ function AdminRouters(props) {
         {
             path: "cast_and_crew/Authors",
             element: <Authors />,
+        },
+        {
+            path: "region/Regions",
+            element: <Regions />,
         },
         {
             path: "region/Locations",

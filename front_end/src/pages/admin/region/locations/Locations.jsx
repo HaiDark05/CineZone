@@ -4,7 +4,7 @@ import TableLocation from './TableLocation';
 import ModalLocation from './ModalLocation';
 import BoxSearch from '../../../../components/BoxSearch';
 
-const inner ={name: "", description: "", imgUrl : logos}
+const inner ={name: "", description: "", id_region: ""}
 function Locations(props) {
     const [open,setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
@@ -13,13 +13,15 @@ function Locations(props) {
         const addItem = () => {
             handleOpen();
             setLocation(inner);
+            setErrors(inner);
         }
         const [location, setLocation] = useState(inner);
         const [errors, setErrors] = useState(inner);
         const validation = () => {
             const newErrors = {};
-            newErrors.name = location.name ? "" : "Vui long nhap name";
-            newErrors.description = location.description ? "" : "vui long nhap descriptions";
+            newErrors.name = location.name ? "" : "Please enter name";
+            newErrors.description = location.description ? "" : "Please enter descriptions";
+            newErrors.id_region = location.id_region ? "" : "Please enter region";
             setErrors(newErrors);
             return Object.values(newErrors).every(e => e == "");
         }

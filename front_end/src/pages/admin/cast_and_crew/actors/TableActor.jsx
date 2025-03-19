@@ -9,7 +9,7 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { FaPencilAlt } from "react-icons/fa";
 import { FaTrash } from "react-icons/fa";
-import { Button, TablePagination } from '@mui/material';
+import { Button, TablePagination, Tooltip } from '@mui/material';
 import { ContextActors } from '../../../../context/ActorsProvider';
 import ModalDelete from '../../../../components/ModalDelete';
 import { deleteImageFromCloudinary } from '../../../../config/cloudinaryConfig';
@@ -42,11 +42,11 @@ function TableActor({ setOpen, setActor, searchObject, actor }) {
         if (actor.imgUrl && actor.imgUrl.includes('cloudinary.com')) {
             // Lấy `public_id` từ URL của Cloudinary
             const publicId = actor.imgUrl
-              .split('/').slice(-2).join('/')  // Lấy thư mục và tên file từ URL
-              .replace(/\.[^/.]+$/, '');       // Loại bỏ phần mở rộng file (ví dụ: .jpg, .png)
+                .split('/').slice(-2).join('/')  // Lấy thư mục và tên file từ URL
+                .replace(/\.[^/.]+$/, '');       // Loại bỏ phần mở rộng file (ví dụ: .jpg, .png)
             await deleteImageFromCloudinary(publicId);
-          }
-        
+        }
+
         await axios.delete(`http://localhost:8080/api/actors/${actor.id}`);
         setUpdate(!update);
         setOpenDeleted(false);
@@ -72,36 +72,41 @@ function TableActor({ setOpen, setActor, searchObject, actor }) {
                                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                             >
                                 <TableCell component="th" scope="row" align="center">
-                                {index + 1 + page * rowsPerPage}
-                                </TableCell>   
-                                <TableCell align="center">
-                                   <img src={row.imgUrl} className='w-10 h-10 rounded-lg' alt="" />
-                                </TableCell>  
+                                    {index + 1 + page * rowsPerPage}
+                                </TableCell>
+                                <TableCell align="center" sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+                                    <img src={row.imgUrl} className='w-12 h-12 rounded-lg' alt="" />
+                                </TableCell>
                                 <TableCell align="center">
                                     {row.name}
                                 </TableCell>
-                                <TableCell align="center">{row.description}</TableCell>
-                               
+                                <TableCell align="center" sx={{ maxWidth: 150, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                                    <Tooltip title={row.description} arrow>
+                                        <span>{row.description.length > 50 ? row.description.slice(0, 50) + "..." : row.description}</span>
+                                    </Tooltip>
+                                </TableCell>
                                 <TableCell align="center">
-                                    <Button
-                                        onClick={() => { setOpen(true); setActor(row) }}
-                                        sx={{
-                                            backgroundColor: 'blue', // Màu nền của nút
-                                            '&:hover': {
-                                                backgroundColor: '#FFD700' // Màu nền khi hover
-                                            }
-                                        }} variant="contained"><FaPencilAlt /></Button>
-                                    <Button
-                                        onClick={() => {
-                                            setOpenDeleted(true); setActor(row);
-                                        }}
-                                        sx={{
-                                            marginLeft: "10px",
-                                            backgroundColor: 'red', // Màu nền của nút
-                                            '&:hover': {
-                                                backgroundColor: 'darkred' // Màu nền khi hover
-                                            }
-                                        }} variant="contained"><FaTrash /></Button>
+                                    <div className="flex justify-center items-center">
+                                        <Button
+                                            onClick={() => { setOpen(true); setActor(row) }}
+                                            sx={{
+                                                backgroundColor: 'blue', // Màu nền của nút
+                                                '&:hover': {
+                                                    backgroundColor: '#FFD700' // Màu nền khi hover
+                                                }
+                                            }} variant="contained"><FaPencilAlt /></Button>
+                                        <Button
+                                            onClick={() => {
+                                                setOpenDeleted(true); setActor(row);
+                                            }}
+                                            sx={{
+                                                marginLeft: "10px",
+                                                backgroundColor: 'red', // Màu nền của nút
+                                                '&:hover': {
+                                                    backgroundColor: 'darkred' // Màu nền khi hover
+                                                }
+                                            }} variant="contained"><FaTrash /></Button>
+                                    </div>
                                 </TableCell>
                             </TableRow>
                         ))}

@@ -10,12 +10,14 @@ function Actors(props) {
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
     const [searchObject, setSearchObject] = useState('');
+    const [actor, setActor] = useState(inner);
+    const [errors, setErrors] = useState(inner);
+    
     const addItem = () => {
         handleOpen();
         setActor(inner);
+        setErrors(inner);
     }
-    const [actor, setActor] = useState(inner);
-    const [errors, setErrors] = useState(inner);
     const validation = () => {
         const newErrors = {};
         newErrors.name = actor.name ? "" : "Vui long nhap name";

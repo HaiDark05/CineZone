@@ -10,12 +10,14 @@ function Characters(props) {
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
     const [searchObject, setSearchObject] = useState('');
+    const [character, setCharacter] = useState(inner);
+    const [errors, setErrors] = useState(inner);
+    
     const addItem = () => {
         handleOpen();
         setCharacter(inner);
+        setErrors(inner);
     }
-    const [character, setCharacter] = useState(inner);
-    const [errors, setErrors] = useState(inner);
     const validation = () => {
         const newErrors = {};
         newErrors.name = character.name ? "" : "Vui long nhap name";

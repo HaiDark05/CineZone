@@ -9,13 +9,15 @@ function Categories(props) {
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
-    const [searchObject, setSearchObject] = useState('');
+    const [searchObject, setSearchObject] = useState(''); 
+    const [category ,setCategory] = useState(inner);
+    const [errors, setErrors] = useState(inner);
+     
     const addItem = () => {
         handleOpen();
         setCategory(inner);
+        setErrors(inner);
     }
-    const [category ,setCategory] = useState(inner);
-    const [errors, setErrors] = useState(inner);
     const validation = () => {
         const newErrors = {};
         newErrors.name = category.name ? "" : "Vui long nhap name";
