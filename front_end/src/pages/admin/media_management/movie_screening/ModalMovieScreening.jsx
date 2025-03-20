@@ -3,9 +3,6 @@ import { ContextMovieScreens } from '../../../../context/MovieScreenProvider';
 import { useNotification } from '../../../../context/NotificationContext';
 import { Autocomplete, Box, Button, Card, CardContent, CardMedia, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, Grid, IconButton, InputAdornment, Paper, styled, TextField, Typography } from '@mui/material';
 import axios from 'axios';
-import dayjs from "dayjs";
-import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { ContextMovies } from '../../../../context/MovieProvider';
 import { ContextRooms } from '../../../../context/RoomsProvider';
 import { ContextRegions } from '../../../../context/RegionsProvider';
@@ -43,7 +40,6 @@ function ModalMovieScreening({ open, handleClose, movieScreen, setMovieScreens, 
     const [openChooseMovie, setOpenChooseMovie] = useState(false);
     const handleOpenChooseMovie = () => setOpenChooseMovie(true);
     const handleCloseChooseMovie = () => setOpenChooseMovie(false);
-    const [movieChoose, setMovieChoose] = useState({});
     const [selectedMovie, setSelectedMovie] = useState(null);
 
     const handleSubmit = async () => {
@@ -223,7 +219,7 @@ function ModalMovieScreening({ open, handleClose, movieScreen, setMovieScreens, 
                                 {movieScreen.id_cinema ? <>
                                     {filterListById(rooms, movieScreen.id_cinema, "id_cinema").map((element, index) => (
                                         <Card sx={{ maxWidth: 345, background: "radial-gradient(circle, rgba(238,174,202,1) 0%, rgba(148,187,233,1) 100%)", }} key={index} >
-                                            <SeatingLayout row={element} />
+                                            <SeatingLayout row={element}/>
                                             <CardContent>
                                                 <Typography
                                                     variant="h5"
@@ -287,7 +283,7 @@ function ModalMovieScreening({ open, handleClose, movieScreen, setMovieScreens, 
                     <Button onClick={handleSubmit} color="primary" variant="contained">Submit</Button>
                 </DialogActions>
             </Dialog>
-            <ModalChooseMovie openChooseMovie={openChooseMovie} setOpenChooseMovie={setOpenChooseMovie} movieChoose={movieChoose} setMovieChoose={setMovieChoose} handleCloseChooseMovie={handleCloseChooseMovie} setSelectedMovie={setSelectedMovie}/>
+            <ModalChooseMovie openChooseMovie={openChooseMovie} setOpenChooseMovie={setOpenChooseMovie} handleCloseChooseMovie={handleCloseChooseMovie} setSelectedMovie={setSelectedMovie}/>
         </div>
     );
 }

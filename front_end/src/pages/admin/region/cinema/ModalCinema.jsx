@@ -7,6 +7,7 @@ import axios from 'axios';
 import { uploadImageToCloudinary } from '../../../../config/cloudinaryConfig';
 import { Autocomplete, Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, FormHelperText, TextField } from '@mui/material';
 import { ImFolderUpload } from 'react-icons/im';
+import { filterListById } from '../../../../utils/FunctionConvert';
 
 function ModalCinema({ open, handleClose, cinema, setCinema, validation, errors }) {
     const showNotification = useNotification();
@@ -102,24 +103,6 @@ function ModalCinema({ open, handleClose, cinema, setCinema, validation, errors 
                     helperText={errors.address}
                 />
                 <Autocomplete
-                    options={locations}
-                    getOptionLabel={(option) => option?.name}
-                    value={locations.find((location) => location.id === cinema?.id_location)}
-                    onChange={(event, newValue) => {
-                        setCinema((prev) => ({
-                            ...prev,
-                            id_location: newValue ? newValue.id : "",
-                        }));
-                    }}
-                    rror={!!errors.id_location}
-                    helperText={errors.id_location}
-                    renderInput={(params) => (
-                        <TextField {...params} label="Select Locations" variant="outlined" fullWidth margin="dense" error={!!errors.id_location}
-                            helperText={errors.id_location} />
-                    )}
-
-                />
-                <Autocomplete
                     options={regions}
                     getOptionLabel={(option) => option?.name}
                     value={regions.find((region) => region.id === cinema?.id_region)}
@@ -134,6 +117,22 @@ function ModalCinema({ open, handleClose, cinema, setCinema, validation, errors 
                     renderInput={(params) => (
                         <TextField {...params} label="Select Regions" variant="outlined" fullWidth margin="dense" error={!!errors.id_region}
                             helperText={errors.id_region} />
+                    )}
+                    
+                />
+                <Autocomplete
+                    options={filterListById(locations, cinema.id_region, "id_region")}
+                    getOptionLabel={(option) => option?.name}
+                    value={locations.find((location) => location.id === cinema?.id_location)}
+                    onChange={(event, newValue) => {
+                        setCinema((prev) => ({
+                            ...prev,
+                            id_location: newValue ? newValue.id : "",
+                        }));
+                    }}
+                    renderInput={(params) => (
+                        <TextField {...params} label="Select Location" variant="outlined" fullWidth margin="dense" error={!!errors.id_location}
+                            helperText={errors.id_location} />
                     )}
 
                 />

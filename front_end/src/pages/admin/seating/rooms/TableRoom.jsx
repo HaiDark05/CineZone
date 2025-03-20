@@ -54,7 +54,8 @@ function TableRoom({ setOpen, setRoom, searchObject, room }) {
                     <TableHead>
                         <TableRow>
                             <TableCell align="center">#</TableCell>
-                            <TableCell align="center">Cinema</TableCell>
+                            <TableCell align="center">Img Cinema</TableCell>
+                            <TableCell align="center">Name Cinema</TableCell>
                             <TableCell align="center">Location</TableCell>
                             <TableCell align="center">Region</TableCell>
                             <TableCell align="center">Name Room</TableCell>
@@ -78,7 +79,7 @@ function TableRoom({ setOpen, setRoom, searchObject, room }) {
                                         className='w-16 h-10 rounded-lg'
                                     />
                                 </TableCell>
-
+                                <TableCell align="center">{getOjectById(cinemas, row.id_cinema)?.name}</TableCell>
                                 <TableCell align="center">{getOjectById(locations, row.id_location)?.name}</TableCell>
                                 <TableCell align="center">{getOjectById(regions, row.id_region)?.name}</TableCell>
                                 <TableCell align="center">
