@@ -35,7 +35,7 @@ function Menu(props) {
                 </div>
                 {openMenu && <h1 className='font-semibold text-teal-300 mt-2'>UI ELEMENTS</h1>}
                 <div className="">
-                    <Link to={'/categories'} className="flex items-center p-2 gap-2 bg-amber-300/75 rounded-lg mt-2 text-white transition duration-700 hover:bg-amber-600/95">
+                    <Link to={'/categories'}  className="flex items-center p-2 gap-2 bg-amber-300/75 rounded-lg mt-2 text-white transition duration-700 hover:bg-amber-600/95">
                         <BiSolidCategory />
                         {openMenu && <h1>Categories</h1>}
                     </Link>
@@ -51,8 +51,8 @@ function Menu(props) {
                             {e.id === open ? <IoMdArrowDropright /> : <IoMdArrowDropdown />}
                         </div>
                         {e.id === open && <div className={`mt-2 p-2 text-gray-700 flex flex-col list-none space-y-2 z-10  whitespace-nowrap ${openMenu ? "" : "md:absolute md:top-0 md:right-0 md:translate-x-full"}`}>
-                          {e.items.map((a,i) => (
-                                <Link to={a.path} className='hover:bg-gray-100 cursor-pointer p-1 bg-orange-200 rounded-lg font-semibold' >{a.title}</Link>
+                          {e.items.map((a,index) => (
+                                <Link key={index} to={a.path} className='hover:bg-gray-100 cursor-pointer p-1 bg-orange-200 rounded-lg font-semibold' >{a.title}</Link>
                           ))}                          
                         </div> }                
                     </div>

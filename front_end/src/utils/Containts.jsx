@@ -10,7 +10,6 @@ import informed from "../assets/informed.png"
 import appleStore from "../assets/applestore.png"
 import androidStore from "../assets/androidstore.png"
 
-
 export const logos = logo ;
 export const chairSelect = chairChoose;
 export const confirm = informed;
@@ -133,32 +132,35 @@ export const menus = [
 export const menu_client = [
     {
         id: 1,
-        title : "Homepage",
+        title : "Home",
         path:"/"
     },
     {
         id: 2,
-        title : "Movie",
-        path:"/movies"
+        title : "MovieScreening",
+        path:"/moviescreeningregion"
     },
     {
         id: 3,
-        title : "MovieScreening",
-        path:"/moviescreening"
+        title : "Booking Record",
+        path:"/moviebookingrecord"
     },
     {
         id: 4,
-        title : "Cinema",
-        path:"/cinemas"
-    },
-    {
-        id: 5,
         title : "Support",
         path:"/supports"
     },
     {
-        id: 6,
+        id: 5,
         title : "Contact",
         path:"/contacts"
+    },
+    {
+        id: 6,
+        title : "Member",
+        path:"/members"
     }
 ];
+
+export const ChairA = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 
+    'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']

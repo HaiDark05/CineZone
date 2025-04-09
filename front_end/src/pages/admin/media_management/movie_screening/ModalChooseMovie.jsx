@@ -3,14 +3,10 @@ import React, { useContext, useState } from 'react';
 import { ContextMovies } from '../../../../context/MovieProvider';
 import { IoSearch } from 'react-icons/io5';
 
-function ModalChooseMovie({openChooseMovie, handleCloseChooseMovie, setSelectedMovie}) {
+function ModalChooseMovie({openChooseMovie, handleCloseChooseMovie, handleChooseMovie }) {
     const { movies } = useContext(ContextMovies);
     const [searchObject, setSearchObject] = useState('');
-
-    const handleChooseMovie = (movie) => {
-        setSelectedMovie(movie);
-        handleCloseChooseMovie();
-    };    
+   
     const filteredMovies = movies.filter((movie) =>
         movie.name.toLowerCase().includes(searchObject.toLowerCase())
     );
@@ -46,7 +42,7 @@ function ModalChooseMovie({openChooseMovie, handleCloseChooseMovie, setSelectedM
                 <DialogContent>
                     <div className='grid grid-cols-3 gap-2'>
                          {filteredMovies?.map((e,index) => (
-                        <div key={index} onClick={() => handleChooseMovie(e)} className="cursor-pointer transition-all duration-300 text-black hover:bg-gradient-to-r from-orange-400 to-pink-500 hover:bg-clip-text hover:text-transparent" >
+                        <div key={index} onClick={() => handleChooseMovie(e.id)} className="cursor-pointer transition-all duration-300 text-black hover:bg-gradient-to-r from-orange-400 to-pink-500 hover:bg-clip-text hover:text-transparent" >
                             <div>
                                 <img src={e.imgUrl} alt="" className='w-40 h-60 m-auto rounded-lg shadow-xl' />
                             </div>

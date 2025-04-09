@@ -18,45 +18,43 @@ import RegionsProvider from './context/RegionsProvider';
 import FoodProvider from './context/FoodProvider';
 import RoomsProvider from './context/RoomsProvider';
 import MovieScreenProvider from './context/MovieScreenProvider';
+import BookingContext from './context/BookingContext';
+import AuthProvider from './context/AuthProvider';
+
+// Danh sách tất cả Providers
+const providers = [
+  NotificationProvider,
+  CategoryProvider,
+  ActorsProvider,
+  AuthorsProvider,
+  CharacterProvider,
+  LocationProvider,
+  MovieProvider,
+  TypeChairsProvider,
+  ChairsProvider,
+  CinemasProvider,
+  RegionsProvider,
+  FoodProvider,
+  RoomsProvider,
+  MovieScreenProvider,
+  BookingContext,
+  AuthProvider
+];
+
+// Hàm bọc `App` trong tất cả các Providers
+const ProvidersWrapper = ({ children }) => {
+  return providers.reduceRight((acc, Provider) => <Provider>{acc}</Provider>, children);
+};
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <BrowserRouter>
-      <NotificationProvider>
-        <CategoryProvider>
-          <ActorsProvider>
-            <AuthorsProvider>
-              <CharacterProvider>
-                <LocationProvider>
-                  <MovieProvider>
-                    <TypeChairsProvider>
-                      <ChairsProvider>
-                        <CinemasProvider>
-                          <RegionsProvider>
-                            <FoodProvider>
-                              <RoomsProvider>
-                                <MovieScreenProvider>
-                                  <App />
-                                </MovieScreenProvider>
-                              </RoomsProvider>
-                            </FoodProvider>
-                          </RegionsProvider>
-                        </CinemasProvider>
-                      </ChairsProvider>
-                    </TypeChairsProvider>
-                  </MovieProvider>
-                </LocationProvider>
-              </CharacterProvider>
-            </AuthorsProvider>
-          </ActorsProvider>
-        </CategoryProvider>
-      </NotificationProvider>
+      <ProvidersWrapper>
+        <App />
+      </ProvidersWrapper>
     </BrowserRouter>
   </React.StrictMode>
 );
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals();

@@ -14,11 +14,15 @@ function Rooms(props) {
     const [searchObject, setSearchObject] = useState('');
     const [room, setRoom] = useState(inner);
     const [errors, setErrors] = useState(inner);
+    const [grid, setGrid] = useState([]);
+     const [selectedCells, setSelectedCells] = useState([]);
     
     const addItem = () => {
         handleOpen();
         setRoom(inner);
         setErrors(inner);
+        setSelectedCells([]);
+        setGrid([]);
     }
     const validation = () => {
         const newErrors = {};
@@ -29,14 +33,19 @@ function Rooms(props) {
         setErrors(newErrors);
         return Object.values(newErrors).every(e => e == "");
     }
+    const generateGrid = (room) => {
+        const rows = parseInt(room.rows);
+        const cols = parseInt(room.cols);
+        setGrid(Array.from({ length: rows }, () => Array(cols).fill("")));
+    };
 
     return (
         <>
             <BoxSearch addItem={addItem} title={"Rooms"} nameBtn={"Room"} setSearchObject={setSearchObject} />
             <div className="p-3 m-auto">
-                <TableRoom searchObject={searchObject} setSearchObject={setSearchObject} setOpen={setOpen} setRoom={setRoom} room={room}/>
+                <TableRoom generateGrid={generateGrid} setSelectedCells={setSelectedCells} searchObject={searchObject} setSearchObject={setSearchObject} setOpen={setOpen} setRoom={setRoom} room={room}/>
             </div>
-            <ModalRoom handleClose={handleClose} open={open} room={room} errors={errors} validation={validation} setRoom={setRoom} />
+            <ModalRoom selectedCells={selectedCells} setSelectedCells={setSelectedCells} grid={grid} generateGrid={generateGrid} handleClose={handleClose} open={open} room={room} errors={errors} validation={validation} setRoom={setRoom} />
             <ModalChooseChair />
         </>
     );

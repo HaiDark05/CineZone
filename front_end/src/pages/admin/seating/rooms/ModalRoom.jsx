@@ -22,15 +22,13 @@ const Item = styled(Paper)(({ theme }) => ({
         backgroundColor: '#1A2027',
     }),
 }));
-function ModalRoom({ open, handleClose, room, setRoom, validation, errors }) {
+function ModalRoom({ open, handleClose, room, setRoom, validation, errors, generateGrid, grid, selectedCells, setSelectedCells }) {
     const { setUpdate } = useContext(ContextRooms);
     const { regions } = useContext(ContextRegions);
     const { locations } = useContext(ContextLocations);
     const { cinemas } = useContext(ContextCinemas)
     const showNotification = useNotification();
-    const [grid, setGrid] = useState([]);
     const [chairChoose, setChairChoose] = useState({});
-    const [selectedCells, setSelectedCells] = useState([]);
     const { typeChairs } = useContext(ContextTypeChairs);
     const [chooseChair, setChooseChair] = useState(false);
     const handleOpenChoose = () => setChooseChair(true);
@@ -67,12 +65,6 @@ function ModalRoom({ open, handleClose, room, setRoom, validation, errors }) {
             [name]: value,
         }));
 
-    };
-
-    const generateGrid = () => {
-        const rows = parseInt(room.rows);
-        const cols = parseInt(room.cols);
-        setGrid(Array.from({ length: rows }, () => Array(cols).fill("")));
     };
 
     const handleCellClick = (row, col) => {
@@ -207,7 +199,7 @@ function ModalRoom({ open, handleClose, room, setRoom, validation, errors }) {
                                         onChange={handleChange}
                                         inputProps={{ min: 0 }}
                                     />
-                                    <Button onClick={generateGrid} color="primary" variant="contained"><FaTableCells className='text-[16px]' /></Button>
+                                    <Button onClick={()=> generateGrid(room)} color="primary" variant="contained"><FaTableCells className='text-[16px]' /></Button>
                                 </Box>
                             </Item>
                         </Grid>

@@ -4,7 +4,6 @@ import { ContextRegions } from '../../../../context/RegionsProvider';
 import { ContextLocations } from '../../../../context/LocationProvider';
 import { ContextCinemas } from '../../../../context/CinemasProvider';
 import { Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Tooltip } from '@mui/material';
-import { ContextChairs } from '../../../../context/ChairsProvider';
 import ModalDelete from '../../../../components/ModalDelete';
 import { FaTrash } from 'react-icons/fa6';
 import { FaPencilAlt } from 'react-icons/fa';
@@ -13,12 +12,11 @@ import { SiCinema4D } from "react-icons/si";
 import axios from 'axios';
 import SeatingLayout from './SeatingLayout';
 
-function TableRoom({ setOpen, setRoom, searchObject, room }) {
+function TableRoom({ setOpen, setRoom, searchObject, room, generateGrid, setSelectedCells }) {
     const { rooms, update, setUpdate } = useContext(ContextRooms);
     const { regions } = useContext(ContextRegions);
     const { locations } = useContext(ContextLocations);
     const { cinemas } = useContext(ContextCinemas);
-    const { chairs } = useContext(ContextChairs);
     const [page, setPage] = useState(0);
     const [openDeleted, setOpenDeleted] = useState(false);
     const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -46,6 +44,13 @@ function TableRoom({ setOpen, setRoom, searchObject, room }) {
         await axios.delete(`http://localhost:8080/api/rooms/${room.id}`);
         setUpdate(!update);
         setOpenDeleted(false);
+    }
+
+    const handleEdit = (row) => {
+        setOpen(true);
+        setRoom(row);
+        generateGrid(row);
+        setSelectedCells(row.list_chair);
     }
     return (
         <div className="">
@@ -86,7 +91,7 @@ function TableRoom({ setOpen, setRoom, searchObject, room }) {
                                     {row.name}
                                 </TableCell>
                                 <TableCell align="center">
-                                    <Tooltip title={<SeatingLayout row={row} />}>
+                                    <Tooltip title={<SeatingLayout row={row} />} placement="top">
                                         <Button variant="contained">
                                             <SiCinema4D />
                                         </Button>
@@ -95,7 +100,7 @@ function TableRoom({ setOpen, setRoom, searchObject, room }) {
                                 <TableCell align="center">
                                     <div className="flex justify-center items-center">
                                         <Button
-                                            onClick={() => { setOpen(true); setRoom(row) }}
+                                            onClick={() => handleEdit(row)}
                                             sx={{
                                                 backgroundColor: 'blue', // Màu nền của nút
                                                 '&:hover': {

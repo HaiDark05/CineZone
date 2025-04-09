@@ -1,6 +1,6 @@
 import React from 'react';
 
-function PaginationRoom(props) {
+function Members(props) {
     return (
         <div>
             
@@ -8,4 +8,4 @@ function PaginationRoom(props) {
     );
 }
 
-export default PaginationRoom;
+export default Members;

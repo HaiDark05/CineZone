@@ -33,7 +33,7 @@ function SeatingLayout({ row }) {
     }
     return (
         <Grid item>
-            <Item sx={{ display: "flex" }}>
+            <Item sx={{ display: "flex" , justifyContent : "center" }}>
                 <div style={{
                     display: "grid",
                     gridTemplateColumns: `repeat(${row.cols},1fr)`,

@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
 import { ContextMovieScreens } from '../../../../context/MovieScreenProvider';
 import { useNotification } from '../../../../context/NotificationContext';
-import { Autocomplete, Box, Button, Card, CardContent, CardMedia, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, Grid, IconButton, InputAdornment, Paper, styled, TextField, Typography } from '@mui/material';
+import { Autocomplete, Box, Button, Card, CardContent, CardMedia, Dialog, DialogActions, DialogContent, DialogTitle, Grid, IconButton, InputAdornment, Paper, styled, TextField, Typography } from '@mui/material';
 import axios from 'axios';
 import { ContextMovies } from '../../../../context/MovieProvider';
 import { ContextRooms } from '../../../../context/RoomsProvider';
@@ -10,11 +10,11 @@ import { ContextLocations } from '../../../../context/LocationProvider';
 import { ContextCinemas } from '../../../../context/CinemasProvider';
 import { filterListById, getOjectById } from '../../../../utils/FunctionConvert';
 import { IoIosTrash, IoMdAdd } from "react-icons/io";
-import { ImFolderUpload } from 'react-icons/im';
 import { BiSolidMoviePlay } from "react-icons/bi";
 import { ImArrowLeft } from "react-icons/im";
 import SeatingLayout from '../../seating/rooms/SeatingLayout';
 import ModalChooseMovie from './ModalChooseMovie';
+import { logos } from '../../../../utils/Containts';
 
 const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: '#fff',
@@ -28,7 +28,7 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 
-function ModalMovieScreening({ open, handleClose, movieScreen, setMovieScreens, validation, errors }) {
+function ModalMovieScreening({ open, handleClose, movieScreen, setMovieScreen, validation, errors }) {
     const showNotification = useNotification();
     const { setUpdate } = useContext(ContextMovieScreens);
     const { movies } = useContext(ContextMovies);
@@ -36,28 +36,40 @@ function ModalMovieScreening({ open, handleClose, movieScreen, setMovieScreens, 
     const { regions } = useContext(ContextRegions);
     const { locations } = useContext(ContextLocations);
     const { cinemas } = useContext(ContextCinemas);
-    const [timeInput, setTimeInput] = useState(""); // Lưu giá trị nhập vào
+    const [timeInput, setTimeInput] = useState("");
     const [openChooseMovie, setOpenChooseMovie] = useState(false);
     const handleOpenChooseMovie = () => setOpenChooseMovie(true);
     const handleCloseChooseMovie = () => setOpenChooseMovie(false);
-    const [selectedMovie, setSelectedMovie] = useState(null);
+
+    const toggleSelection = (list, item) => {
+        return list.includes(item) ? list.filter(i => i !== item) : [...list, item];
+    };
+
+    const handleSelectRoom = (roomId) => {
+        setMovieScreen(prev => {
+            let updatedList = toggleSelection(prev.id_room, roomId);
+            return { ...prev, id_room: updatedList };
+        })
+    };
 
     const handleSubmit = async () => {
-        if (!validation()) {
-            return;
+        try {
+            if (movieScreen.id) {
+                await axios.put(`http://localhost:8080/api/moviescreens/${movieScreen.id}`, movieScreen);
+            } else {
+                await axios.post("http://localhost:8080/api/moviescreens", movieScreen);
+                showNotification('MovieScreen added successfully!', "success");
+            }
+            handleClose(); // Đóng modal
+            setUpdate((prev) => !prev);
+        } catch (error) {
+            console.error("Error submitting movieScreening:", error);
+            showNotification("Error submitting movieScreening!", "error");
         }
-        // if (movieScreen.id) {
-        //     await axios.put(`http://localhost:8080/api/moviescreens/${movieScreen.id}`, movieScreen);
-        // } else {
-        //     await axios.post("http://localhost:8080/api/moviescreens", movieScreen);
-        //     showNotification('MovieScreen added successfully!', "success");
-        // }
-        handleClose(); // Đóng modal
-        setUpdate((prev) => !prev); // Cập nhật lại state để load lại dữ liệu
     };
     const handleChange = (event) => {
         const { name, value } = event.target;
-        setMovieScreens((prevData) => ({
+        setMovieScreen((prevData) => ({
             ...prevData,
             [name]: value,
         }));
@@ -70,7 +82,7 @@ function ModalMovieScreening({ open, handleClose, movieScreen, setMovieScreens, 
     // Thêm giờ vào danh sách `showtime`
     const handleAddTime = () => {
         if (timeInput && !movieScreen.showtime.includes(timeInput)) {
-            setMovieScreens((prev) => ({
+            setMovieScreen((prev) => ({
                 ...prev,
                 showtime: [...prev.showtime, timeInput],
             }));
@@ -79,18 +91,22 @@ function ModalMovieScreening({ open, handleClose, movieScreen, setMovieScreens, 
     };
     // Xóa giờ khỏi danh sách
     const handleRemoveTime = (time) => {
-        setMovieScreens((prev) => ({
+        setMovieScreen((prev) => ({
             ...prev,
             showtime: prev.showtime.filter((t) => t !== time), // Xóa giờ khỏi mảng
         }));
     };
     const handleBack = () => {
-        setMovieScreens(prevData => ({
+        setMovieScreen(prevData => ({
             ...prevData,
             id_cinema: null
         }));
     };
 
+    const handleChooseMovie = (movie) => {
+        setMovieScreen({ ...movieScreen, id_movie: movie })
+        handleCloseChooseMovie();
+    };
     return (
         <div className="">
             <Dialog open={open} onClose={handleClose} fullWidth PaperProps={{
@@ -113,7 +129,7 @@ function ModalMovieScreening({ open, handleClose, movieScreen, setMovieScreens, 
                                         margin="dense"
                                         name="release_date"
                                         type="date"
-                                        // value={}
+                                        value={movieScreen?.release_date}
                                         onChange={handleChange}
                                     />
                                     <Autocomplete
@@ -121,13 +137,13 @@ function ModalMovieScreening({ open, handleClose, movieScreen, setMovieScreens, 
                                         getOptionLabel={(option) => option?.name}
                                         value={regions.find((region) => region.id === movieScreen?.id_region)}
                                         onChange={(event, newValue) => {
-                                            setMovieScreens((prev) => ({
+                                            setMovieScreen((prev) => ({
                                                 ...prev,
                                                 id_region: newValue ? newValue.id : "",
                                             }));
                                         }}
                                         renderInput={(params) => (
-                                            <TextField {...params} label="Select Region" variant="outlined" fullWidth margin="dense" error={!!errors.id_region}
+                                            <TextField {...params} label="Select Region" variant="outlined" name='id_region' fullWidth margin="dense" error={!!errors.id_region}
                                                 helperText={errors.id_region} />
                                         )}
 
@@ -139,7 +155,7 @@ function ModalMovieScreening({ open, handleClose, movieScreen, setMovieScreens, 
                                         margin="dense"
                                         name="ratio"
                                         type="number"
-                                        // value={}
+                                        value={movieScreen?.ratio}
                                         onChange={handleChange}
                                     />
                                     <Autocomplete
@@ -147,13 +163,13 @@ function ModalMovieScreening({ open, handleClose, movieScreen, setMovieScreens, 
                                         getOptionLabel={(option) => option?.name}
                                         value={locations.find((location) => location.id === movieScreen?.id_location)}
                                         onChange={(event, newValue) => {
-                                            setMovieScreens((prev) => ({
+                                            setMovieScreen((prev) => ({
                                                 ...prev,
                                                 id_location: newValue ? newValue.id : "",
                                             }));
                                         }}
                                         renderInput={(params) => (
-                                            <TextField {...params} label="Select Location" variant="outlined" fullWidth margin="dense" error={!!errors.id_location}
+                                            <TextField {...params} label="Select Location" name='id_location' variant="outlined" fullWidth margin="dense" error={!!errors.id_location}
                                                 helperText={errors.id_location} />
                                         )}
 
@@ -201,25 +217,35 @@ function ModalMovieScreening({ open, handleClose, movieScreen, setMovieScreens, 
                                             </button>
                                         ))}
                                     </div>
-                                    {selectedMovie && (
-                                        <Box mt={2} display="flex" justifyContent="center">
-                                            <img
-                                                src={selectedMovie.imgUrl}
-                                                alt={selectedMovie.name}
-                                                className="w-40 h-60 object-cover rounded-lg"
-                                            />
-                                        </Box>
-                                    )}
+
+                                    <Box mt={2} display="flex" justifyContent="center">
+                                        <img
+                                            src={getOjectById(movies, movieScreen.id_movie)?.imgUrl ? getOjectById(movies, movieScreen.id_movie)?.imgUrl : logos}
+                                            alt=""
+                                            className={`w-40 object-cover rounded-lg  ${getOjectById(movies, movieScreen.id_movie)?.imgUrl ? "h-60" : "h-40"}`}
+                                        />
+                                    </Box>
+
                                 </div>
 
                             </Item>
                         </Grid>
-                        <Grid item xs={12} md={6}>                         
+                        <Grid item xs={12} md={6}>
                             <Item className='grid grid-cols-3 gap-2 bg-gradient-to-t from-[#fbc2eb] to-[#a6c1ee]'>
                                 {movieScreen.id_cinema ? <>
                                     {filterListById(rooms, movieScreen.id_cinema, "id_cinema").map((element, index) => (
-                                        <Card sx={{ maxWidth: 345, background: "radial-gradient(circle, rgba(238,174,202,1) 0%, rgba(148,187,233,1) 100%)", }} key={index} >
-                                            <SeatingLayout row={element}/>
+                                        <Card
+                                            key={index}
+                                            onClick={() => handleSelectRoom(element.id)}
+                                            sx={{
+                                                background: movieScreen.id_room.includes(element.id)
+                                                    ? "radial-gradient(circle, rgba(34,193,195,1) 0%, rgba(253,187,45,1) 100%)"
+                                                    : "radial-gradient(circle, rgba(238,174,202,1) 0%, rgba(148,187,233,1) 100%)",
+                                                transition: "background 0.3s ease",
+                                                cursor: "pointer"
+                                            }}
+                                        >
+                                            <SeatingLayout row={element} />
                                             <CardContent>
                                                 <Typography
                                                     variant="h5"
@@ -246,7 +272,7 @@ function ModalMovieScreening({ open, handleClose, movieScreen, setMovieScreens, 
                                     </div>
                                 </> : <>
                                     {filterListById(cinemas, movieScreen.id_location, "id_location").map((element, index) => (
-                                        <Card sx={{ maxWidth: 345, background: "radial-gradient(circle, rgba(238,174,202,1) 0%, rgba(148,187,233,1) 100%)" }} key={index} onClick={() => setMovieScreens({ ...movieScreen, id_cinema: element.id })}>
+                                        <Card sx={{ maxWidth: 345, background: "radial-gradient(circle, rgba(238,174,202,1) 0%, rgba(148,187,233,1) 100%)" }} key={index} onClick={() => setMovieScreen({ ...movieScreen, id_cinema: element.id })}>
                                             <CardMedia
                                                 component="img"
                                                 className='h-32'
@@ -283,7 +309,7 @@ function ModalMovieScreening({ open, handleClose, movieScreen, setMovieScreens, 
                     <Button onClick={handleSubmit} color="primary" variant="contained">Submit</Button>
                 </DialogActions>
             </Dialog>
-            <ModalChooseMovie openChooseMovie={openChooseMovie} setOpenChooseMovie={setOpenChooseMovie} handleCloseChooseMovie={handleCloseChooseMovie} setSelectedMovie={setSelectedMovie}/>
+            <ModalChooseMovie handleChooseMovie={handleChooseMovie} openChooseMovie={openChooseMovie} setOpenChooseMovie={setOpenChooseMovie} handleCloseChooseMovie={handleCloseChooseMovie} />
         </div>
     );
 }

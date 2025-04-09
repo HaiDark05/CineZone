@@ -1,11 +1,51 @@
-import { Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tooltip } from '@mui/material';
-import React, { useState } from 'react';
+import { Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Tooltip } from '@mui/material';
+import React, { useContext, useState } from 'react';
 import { FaPencilAlt, FaTrash } from "react-icons/fa";
-import { logos } from '../../../../utils/Containts';
+import { ContextMovieScreens } from '../../../../context/MovieScreenProvider';
+import axios from 'axios';
+import { getOjectById } from '../../../../utils/FunctionConvert';
+import { ContextRooms } from '../../../../context/RoomsProvider';
+import { ContextCinemas } from '../../../../context/CinemasProvider';
+import { ContextLocations } from '../../../../context/LocationProvider';
+import { ContextRegions } from '../../../../context/RegionsProvider';
+import { ContextMovies } from '../../../../context/MovieProvider';
+import ModalDelete from '../../../../components/ModalDelete';
+import { TbBrandCinema4D } from "react-icons/tb";
+import { IoIosTime } from "react-icons/io";
 
-function TableMovieScreening(props) {
-    const [hoveredRow, setHoveredRow] = useState(null);
+function TableMovieScreening({ setOpen, setMovieScreen, searchObject, movieScreen }) {
+    const { movieScreens, setUpdate, update } = useContext(ContextMovieScreens);
+    const { rooms } = useContext(ContextRooms);
+    const { cinemas } = useContext(ContextCinemas);
+    const { regions } = useContext(ContextRegions);
+    const { movies } = useContext(ContextMovies);
+    const { locations } = useContext(ContextLocations);
+    const [page, setPage] = useState(0);
+    const [openDeleted, setOpenDeleted] = useState(false);
+    const [rowsPerPage, setRowsPerPage] = useState(5);
+    const handleChangePage = (event, newPage) => {
+        setPage(newPage);
+    };
 
+    // Xử lý khi thay đổi số hàng trên mỗi trang
+    const handleChangeRowsPerPage = (event) => {
+        setRowsPerPage(parseInt(event.target.value, 10));
+        setPage(0); // Quay lại trang đầu tiên
+    };
+
+    const filteredMovieScreen = movieScreens.filter((movieScreen) =>
+        getOjectById(movies, movieScreen.id_movie)?.name?.toLowerCase().includes(searchObject?.toLowerCase())
+    );
+
+
+    // Xử lý các hàng hiển thị trong một trang
+    const rowsToDisplay = filteredMovieScreen?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
+
+    const handleDelete = async () => {
+        await axios.delete(`http://localhost:8080/api/moviescreens/${movieScreen.id}`);
+        setUpdate(!update);
+        setOpenDeleted(false);
+    }
     return (
         <div>
             <TableContainer component={Paper}>
@@ -25,7 +65,7 @@ function TableMovieScreening(props) {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {Array.from({ length: 5 }, (_, index) => (
+                        {rowsToDisplay.map((row, index) => (
                             <TableRow
                                 key={index}
                                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
@@ -33,56 +73,49 @@ function TableMovieScreening(props) {
                                 <TableCell component="th" scope="row" align="center">
                                     {index + 1}
                                 </TableCell>
-                                <TableCell align="center">
-                                    Bo Gia
+                                <TableCell align="center" style={{ fontWeight: "bold" }}>
+                                    {getOjectById(movies, row.id_movie)?.name}
                                 </TableCell>
                                 <TableCell align="center">
-                                    <Tooltip
-                                        title={<img src={logos} alt="" className="w-20 h-20" />}
-                                        arrow
-                                    >
-                                        <span className="cursor-pointer text-indigo-600">Phong 201</span>
+                                    <Tooltip title={row.id_room.map((e, index) => (
+                                        row.id_room.length == index + 1 ? getOjectById(rooms, e)?.name : getOjectById(rooms, e)?.name + ", "
+                                    ))} arrow >
+                                        <Button variant="contained">
+                                            <TbBrandCinema4D />
+                                        </Button>
                                     </Tooltip>
                                 </TableCell>
-                                <TableCell align="center">
-                                    Rio
+                                <TableCell align="center" >
+                                    {getOjectById(cinemas, row.id_cinema)?.name}
                                 </TableCell>
                                 <TableCell align="center">
-                                    Lien Chieu
+                                    {getOjectById(locations, row.id_location)?.name}
                                 </TableCell>
                                 <TableCell align="center">
-                                    Da Nang
+                                    {getOjectById(regions, row.id_region)?.name}
                                 </TableCell>
                                 <TableCell align="center">
-                                    20/08/2024
+                                    {row.release_date}
                                 </TableCell>
 
                                 {/* Hiển thị thời gian chiếu khi hover */}
                                 <TableCell
                                     align="center"
                                     className="relative"
-                                    onMouseEnter={() => setHoveredRow(index)}
-                                    onMouseLeave={() => setHoveredRow(null)}
                                 >
-                                    Hover to show screenings
-                                    {hoveredRow === index && (
-                                        <div className="absolute top-full left-1/2 transform -translate-x-1/2 bg-white border border-gray-300 p-2 shadow-lg rounded-md flex gap-2 flex-wrap justify-center z-50">
-                                            {Array.from({ length: 8 }, (_, i) => (
-                                                <Tooltip key={i} title={`Screening Time ${i + 1}`} arrow>
-                                                    <span className="border border-lime-400 w-16 p-2 rounded-md cursor-pointer transition-all duration-300 hover:border-slate-600 hover:text-indigo-600">
-                                                        {`${(8 + i * 2) % 24}:00`}
-                                                    </span>
-                                                </Tooltip>
-                                            ))}
-                                        </div>
-                                    )}
+                                    <Tooltip title={row.showtime?.map((element,index) => row.showtime.length == index + 1 ? element : element + ", ")} arrow >
+                                        <Button variant="contained">
+                                        <IoIosTime />
+                                        </Button>
+                                    </Tooltip>
                                 </TableCell>
 
                                 <TableCell align="center">
-                                    0,5
+                                    {row.ratio}
                                 </TableCell>
                                 <TableCell align="center">
                                     <Button
+                                        onClick={() => { setOpen(true); setMovieScreen(row) }}
                                         sx={{
                                             backgroundColor: 'blue',
                                             '&:hover': { backgroundColor: '#FFD700' }
@@ -92,6 +125,9 @@ function TableMovieScreening(props) {
                                         <FaPencilAlt />
                                     </Button>
                                     <Button
+                                        onClick={() => {
+                                            setOpenDeleted(true); setMovieScreen(row);
+                                        }}
                                         sx={{
                                             marginLeft: "10px",
                                             backgroundColor: 'red',
@@ -105,8 +141,17 @@ function TableMovieScreening(props) {
                             </TableRow>
                         ))}
                     </TableBody>
+                    <TablePagination
+                        rowsPerPageOptions={[5, 10, 15]}
+                        count={movieScreens.length}
+                        rowsPerPage={rowsPerPage}
+                        page={page}
+                        onPageChange={handleChangePage}
+                        onRowsPerPageChange={handleChangeRowsPerPage}
+                    />
                 </Table>
             </TableContainer>
+            <ModalDelete openDeleted={openDeleted} setOpenDeleted={setOpenDeleted} handleDelete={handleDelete} />
         </div>
     );
 }

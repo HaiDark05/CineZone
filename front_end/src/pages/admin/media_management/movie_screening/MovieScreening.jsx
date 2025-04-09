@@ -5,17 +5,17 @@ import ModalMovieScreening from './ModalMovieScreening';
 import { logos } from '../../../../utils/Containts';
 import ModalChooseMovie from './ModalChooseMovie';
 
-const inner = { release_date: "", showtime: [], ratio: "", id_room: "", id_movie: "", id_region: "", id_location: "", id_cinema: "", imgMovie: logos }
+const inner = { release_date: "", showtime: [], ratio: "", id_room: [], id_movie:"", id_region: "", id_location: "", id_cinema: "" }
 function MovieScreening(props) {
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
     const [searchObject, setSearchObject] = useState('');
-    const [movieScreen, setMovieScreens] = useState(inner);
+    const [movieScreen, setMovieScreen] = useState(inner);
     const [errors, setErrors] = useState(inner);
     const addItem = () => {
         handleOpen();
-        setMovieScreens(inner);
+        setMovieScreen(inner);
         setErrors(inner);
     }
     const validation = () => {
@@ -31,9 +31,9 @@ function MovieScreening(props) {
         <>
             <BoxSearch addItem={addItem} title={"MovieScreen"} nameBtn={"MovieScreen"} setSearchObject={setSearchObject} />
             <div className="">
-                <TableMovieScreening/>
+                <TableMovieScreening setOpen={setOpen} movieScreen={movieScreen} setMovieScreen={setMovieScreen} searchObject={searchObject}/>
             </div>
-            <ModalMovieScreening handleClose={handleClose} open={open} movieScreen={movieScreen} errors={errors} validation={validation} setMovieScreens={setMovieScreens}/>
+            <ModalMovieScreening handleClose={handleClose} open={open} movieScreen={movieScreen} errors={errors} validation={validation} setMovieScreen={setMovieScreen}/>
             <ModalChooseMovie/>
         </>
     );

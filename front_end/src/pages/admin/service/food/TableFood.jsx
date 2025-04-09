@@ -73,7 +73,7 @@ function TableFood({ setOpen, setFood, searchObject, food }) {
                                 </TableCell>
                                 <TableCell align="center">
                                     <div className="flex justify-center items-center">
-                                        <img src={row.imgUrl} className='w-10 h-10 rounded-lg' alt="" />
+                                        <img src={row.imgUrl} className='w-12 h-10 rounded-lg' alt="" />
                                     </div>
                                 </TableCell>
                                 <TableCell align="center">
