@@ -28,10 +28,10 @@ const getMovieScreensById = async (req, res) => {
 
 const addMovieScreens = async (req, res) => {
   try {
-    const {id_movie, id_room, releast_day, screening_time, ratio } = req.body;
+    const {id_movie, id_room, id_cinema, id_location, id_region, release_date, showtime, ratio } = req.body;
     const docRef = movieScreensCollection.doc();
-    const movieScreens = new MovieScreens(docRef.id, id_movie, id_room, releast_day, screening_time, ratio);
-    await docRef.set(MovieScreens.toFirestore());
+    const movieScreens = new MovieScreens(docRef.id, id_movie, id_room, id_cinema, id_location, id_region, release_date, showtime, ratio);
+    await docRef.set(movieScreens.toFirestore());
     res.status(201).json({ message: "MovieScreens added", movieScreens });
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -41,8 +41,8 @@ const addMovieScreens = async (req, res) => {
 
 const updateMovieScreens = async (req, res) => {
   try {
-    const {id_movie, id_room, releast_day, screening_time, ratio } = req.body;
-    await movieScreensCollection.doc(req.params.id).update({ id_movie, id_room, releast_day, screening_time, ratio });
+    const {id_movie, id_room, id_cinema, id_location, id_region, release_date, showtime, ratio } = req.body;
+    await movieScreensCollection.doc(req.params.id).update({ id_movie, id_room, id_cinema, id_location, id_region, release_date, showtime, ratio });
     res.json({ message: "MovieScreens updated" });
   } catch (error) {
     res.status(500).json({ error: error.message });

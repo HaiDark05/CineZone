@@ -13,6 +13,7 @@ const regionRoutes = require("./routes/regionRoutes")
 const foodRoutes = require("./routes/foodRoutes")
 const movieScreenRoutes = require("./routes/movieScreenRoutes")
 const roomRoutes = require("./routes/roomRoutes")
+const accountsRoutes = require("./routes/accountsRoutes")
 
 const app = express();
 app.use(cors());
@@ -31,6 +32,7 @@ app.use("/api/regions",regionRoutes);
 app.use("/api/food",foodRoutes);
 app.use("/api/moviescreens",movieScreenRoutes);
 app.use("/api/rooms",roomRoutes);
+app.use("/api/accounts",accountsRoutes);
 
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
