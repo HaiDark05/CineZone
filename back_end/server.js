@@ -7,17 +7,22 @@ const characterRoutes = require("./routes/characterRoutes")
 const locationRoutes = require("./routes/locationRoutes")
 const movieRoutes = require("./routes/movieRoutes")
 const typeChairRoutes = require("./routes/typeChairRoutes")
-const chairRoutes = require("./routes/chairRoutes")
 const cinemaRoutes = require("./routes/cinemaRoutes")
 const regionRoutes = require("./routes/regionRoutes")
 const foodRoutes = require("./routes/foodRoutes")
 const movieScreenRoutes = require("./routes/movieScreenRoutes")
 const roomRoutes = require("./routes/roomRoutes")
 const accountsRoutes = require("./routes/accountsRoutes")
+const bookingsRoutes = require("./routes/bookingsRoutes")
+const cookieParser = require("cookie-parser");
 
 const app = express();
-app.use(cors());
+app.use(cors({
+  origin: "http://localhost:3000",
+  credentials: true
+}));
 app.use(express.json());
+app.use(cookieParser());
 
 app.use("/api/categories", categoryRoutes);
 app.use("/api/actors", actorRoutes);
@@ -26,13 +31,13 @@ app.use("/api/characters",characterRoutes);
 app.use("/api/location",locationRoutes);
 app.use("/api/movies",movieRoutes);
 app.use("/api/typechairs",typeChairRoutes);
-app.use("/api/chairs",chairRoutes);
 app.use("/api/cinemas",cinemaRoutes);
 app.use("/api/regions",regionRoutes);
 app.use("/api/food",foodRoutes);
 app.use("/api/moviescreens",movieScreenRoutes);
 app.use("/api/rooms",roomRoutes);
 app.use("/api/accounts",accountsRoutes);
+app.use("/api/bookings",bookingsRoutes);
 
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {

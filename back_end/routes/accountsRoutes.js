@@ -11,7 +11,6 @@ const {
 const router = express.Router();
 
 router.get("/", getAllAccount);
-router.get("/auth", getInforAccount); // 👈 Quan trọng
 router.get("/:id", getAccountById);
 router.post("/", addAccount);
 router.put("/:id", updateAccount);
