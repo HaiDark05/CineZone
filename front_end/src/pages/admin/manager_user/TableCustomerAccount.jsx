@@ -1,17 +1,15 @@
+import { Button, IconButton, InputAdornment, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, TextField } from '@mui/material';
 import React, { useContext, useState } from 'react';
-import { ContextFood } from '../../../../context/FoodProvider';
+import ModalDelete from '../../../components/ModalDelete';
+import { FaPencilAlt, FaTrash } from 'react-icons/fa';
+import { MdVisibilityOff } from 'react-icons/md';
+import { ContextAccounts } from '../../../context/AccountsProvider';
+import { deleteImageFromCloudinary } from '../../../config/cloudinaryConfig';
 import axios from 'axios';
-import { deleteImageFromCloudinary } from '../../../../config/cloudinaryConfig';
-import { Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow } from '@mui/material';
-import { ContextCinemas } from '../../../../context/CinemasProvider';
-import ModalDelete from '../../../../components/ModalDelete';
-import { FaPencilAlt } from "react-icons/fa";
-import { FaTrash } from "react-icons/fa";
-import { getOjectById } from '../../../../utils/FunctionConvert';
+import { ROLES } from '../../../utils/Containts';
 
-function TableFood({ setOpen, setFood, searchObject, food }) {
-    const { foodSV, update, setUpdate } = useContext(ContextFood)
-    const { cinemas } = useContext(ContextCinemas);
+function TableCustomerAccount({ setOpen, setAccount, searchObject, account }) {
+    const { accounts, update, setUpdate } = useContext(ContextAccounts);
     const [page, setPage] = useState(0);
     const [openDeleted, setOpenDeleted] = useState(false);
     const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -27,23 +25,26 @@ function TableFood({ setOpen, setFood, searchObject, food }) {
         setPage(0); // Quay lại trang đầu tiên
     };
 
-    const filteredFood = foodSV.filter((food) =>
-        food.name.toLowerCase().includes(searchObject.toLowerCase())
+    // Lọc tất cả user KHÔNG phải là admin và có tên phù hợp với từ khóa tìm kiếm
+    const filteredAccount = accounts
+    .filter((account) => account.id_role !== ROLES.ADMIN) // Bỏ admin
+    .filter((account) =>
+        account.user_name.toLowerCase().includes(searchObject.toLowerCase())
     );
 
     // Xử lý các hàng hiển thị trong một trang
-    const rowsToDisplay = filteredFood?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
+    const rowsToDisplay = filteredAccount?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 
     const handleDelete = async () => {
-        if (food.imgUrl && food.imgUrl.includes('cloudinary.com')) {
+        if (account.imgUrl && account.imgUrl.includes('cloudinary.com')) {
             // Lấy `public_id` từ URL của Cloudinary
-            const publicId = food.imgUrl
+            const publicId = account.imgUrl
                 .split('/').slice(-2).join('/')  // Lấy thư mục và tên file từ URL
                 .replace(/\.[^/.]+$/, '');       // Loại bỏ phần mở rộng file (ví dụ: .jpg, .png)
             await deleteImageFromCloudinary(publicId);
         }
 
-        await axios.delete(`http://localhost:8080/api/food/${food.id}`);
+        await axios.delete(`http://localhost:8080/api/accounts/${account.id}`);
         setUpdate(!update);
         setOpenDeleted(false);
     }
@@ -54,11 +55,13 @@ function TableFood({ setOpen, setFood, searchObject, food }) {
                     <TableHead sx={{ backgroundColor: '#1F2937' }}>
                         <TableRow sx={{ whiteSpace: 'nowrap'}}>
                             <TableCell align="center" sx={{ color: 'white' }}>#</TableCell>
-                            <TableCell align="center" sx={{ color: 'white' }}>Img Url</TableCell>
-                            <TableCell align="center" sx={{ color: 'white' }}>Food Name</TableCell>
-                            <TableCell align="center" sx={{ color: 'white' }}>Price</TableCell>
-                            <TableCell align="center" sx={{ color: 'white' }}>Discount</TableCell>
-                            <TableCell align="center" sx={{ color: 'white' }}>Cinema</TableCell>
+                            <TableCell align="center" sx={{ color: 'white' }}>ImgUrl</TableCell>
+                            <TableCell align="center" sx={{ color: 'white' }}>User name</TableCell>
+                            <TableCell align="center" sx={{ color: 'white' }}>Email</TableCell>
+                            <TableCell align="center" sx={{ color: 'white' }}>Password</TableCell>
+                            <TableCell align="center" sx={{ color: 'white' }}>Phone</TableCell>
+                            <TableCell align="center" sx={{ color: 'white' }}>Gender</TableCell>
+                            <TableCell align="center" sx={{ color: 'white' }}>Role</TableCell>
                             <TableCell align="center" sx={{ color: 'white' }}>Action</TableCell>
                         </TableRow>
                     </TableHead>
@@ -73,25 +76,51 @@ function TableFood({ setOpen, setFood, searchObject, food }) {
                                 </TableCell>
                                 <TableCell align="center">
                                     <div className="flex justify-center items-center">
-                                        <img src={row.imgUrl} className='w-12 h-10 rounded-lg' alt="" />
+                                        <img
+                                            src={row.imgUrl}
+                                            alt="avatar"
+                                            className="w-12 h-12 rounded-full object-cover"
+                                        />
                                     </div>
                                 </TableCell>
                                 <TableCell align="center">
-                                    {row.name}
+                                    {row.user_name}
                                 </TableCell>
                                 <TableCell align="center">
-                                    {row.price}
+                                    {row.email}
                                 </TableCell>
                                 <TableCell align="center">
-                                    {row.discount}
+                                    <TextField
+                                        sx={{ width: '200px' }}
+                                        type={'password'}
+                                        value={'•'.repeat(row.pass_word.length)}
+                                        size="small"
+                                        variant="outlined"
+                                        InputProps={{
+                                            readOnly: true,
+                                            endAdornment: (
+                                                <InputAdornment position="center">
+                                                    <IconButton edge="end">
+                                                        <MdVisibilityOff />
+                                                    </IconButton>
+                                                </InputAdornment>
+                                            ),
+                                        }}
+                                    />
                                 </TableCell>
                                 <TableCell align="center">
-                                    {getOjectById(cinemas, row.id_cinema)?.name}
+                                    {row.phone}
+                                </TableCell>
+                                <TableCell align="center">
+                                    {row.gender}
+                                </TableCell>
+                                <TableCell align="center">
+                                    {row.id_role}
                                 </TableCell>
                                 <TableCell align="center">
                                     <div className="flex justify-center items-center">
                                         <Button
-                                            onClick={() => { setOpen(true); setFood(row) }}
+                                            onClick={() => { setOpen(true); setAccount(row) }}
                                             sx={{
                                                 backgroundColor: 'blue', // Màu nền của nút
                                                 '&:hover': {
@@ -100,7 +129,7 @@ function TableFood({ setOpen, setFood, searchObject, food }) {
                                             }} variant="contained"><FaPencilAlt /></Button>
                                         <Button
                                             onClick={() => {
-                                                setOpenDeleted(true); setFood(row);
+                                                setOpenDeleted(true); setAccount(row);
                                             }}
                                             sx={{
                                                 marginLeft: "10px",
@@ -116,7 +145,7 @@ function TableFood({ setOpen, setFood, searchObject, food }) {
                     </TableBody>
                     <TablePagination
                         rowsPerPageOptions={[5, 10, 15]}
-                        count={foodSV.length}
+                        count={accounts.length}
                         rowsPerPage={rowsPerPage}
                         page={page}
                         onPageChange={handleChangePage}
@@ -129,4 +158,4 @@ function TableFood({ setOpen, setFood, searchObject, food }) {
     );
 }
 
-export default TableFood;
+export default TableCustomerAccount;

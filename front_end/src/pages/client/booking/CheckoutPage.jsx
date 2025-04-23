@@ -4,13 +4,52 @@ import { ContextBooking } from '../../../context/BookingContext';
 import { ContextMovieScreens } from '../../../context/MovieScreenProvider';
 import { getOjectById } from '../../../utils/FunctionConvert';
 import { ContextMovies } from '../../../context/MovieProvider';
-import { Link } from 'react-router-dom';
+import { ContextRooms } from '../../../context/RoomsProvider';
+import { ContextCinemas } from '../../../context/CinemasProvider';
+import { ContextLocations } from '../../../context/LocationProvider'
+import { ContextRegions } from '../../../context/RegionsProvider';
+import { ContextFood } from '../../../context/FoodProvider';
+import { initialOptions } from '../../../utils/Containts';
+import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
+import { ContextTypeChairs } from '../../../context/TypeChairsProvider';
+import axios from 'axios';
+import { ContextBookings } from '../../../context/BookingsProvider';
+import { ContextAuth } from '../../../context/AuthProvider';
+import { useNavigate } from 'react-router-dom';
+import { useNotification } from '../../../context/NotificationContext';
 
-function CheckoutPage(props) {
-    const { booking, setBooking } = useContext(ContextBooking);
+
+function CheckoutPage() {
+    const showNotification = useNotification();
+    const { isLogin } = useContext(ContextAuth);
+    const { booking, setBooking, inner } = useContext(ContextBooking);
+    const { setUpdate } = useContext(ContextBookings);
+    const navigate = useNavigate();
     const { movieScreens } = useContext(ContextMovieScreens);
     const { movies } = useContext(ContextMovies);
-    console.log(booking);
+    const { rooms } = useContext(ContextRooms);
+    const { cinemas } = useContext(ContextCinemas);
+    const { locations } = useContext(ContextLocations);
+    const { regions } = useContext(ContextRegions);
+    const { foodSV } = useContext(ContextFood);
+    const { typeChairs } = useContext(ContextTypeChairs);
+
+    const reduced = () => {
+        return booking?.list_chair?.reduce((sum, item) => {
+            const chairType = getOjectById(typeChairs, item.id_type_chair);
+            const screen = getOjectById(movieScreens, booking?.id_screen);
+            return sum + (chairType?.price || 0) * (screen?.ratio || 1);
+        }, 0) || 0;
+    };
+
+    const createSubscription = async (id) => {
+        const updateBookings = {...booking, id_account : isLogin.id, totalChair: booking.total - booking.totalFood, booking_date: new Date()};
+        await axios.post("http://localhost:8080/api/bookings", updateBookings);
+        setUpdate((prev) => !prev);
+        navigate('/moviebookingrecord');
+        setBooking(inner);
+    }; 
+
     return (
         <div>
             <div className="w-[70%] mx-auto p-4">
@@ -39,8 +78,8 @@ function CheckoutPage(props) {
                                     <h3 className="font-bold text-lg">
                                         {getOjectById(movies, getOjectById(movieScreens, booking.id_screen)?.id_movie)?.name}
                                     </h3>
-                                    <p>RIO Liên Chiểu Đà Nẵng - Phòng 03</p>
-                                    <p>Suất chiếu 06/04/2025 - 09:40</p>
+                                    <p>{getOjectById(cinemas, getOjectById(movieScreens, booking.id_screen)?.id_cinema)?.name} - {getOjectById(locations, getOjectById(movieScreens, booking.id_screen)?.id_location)?.name} - TP.{getOjectById(regions, getOjectById(movieScreens, booking.id_screen)?.id_region)?.name} - {getOjectById(rooms, booking.id_room)?.name}</p>
+                                    <p>Suất chiếu {getOjectById(movieScreens, booking.id_screen)?.release_date} - {booking?.time}</p>
                                 </div>
                             </div>
                         )}
@@ -51,13 +90,13 @@ function CheckoutPage(props) {
                             </h4>
                             <div className="p-4 border">
                                 <p>
-                                    <strong>Họ tên:</strong> HaiLy
+                                    <strong>Họ tên:</strong> {isLogin?.user_name}
                                 </p>
                                 <p>
-                                    <strong>Email:</strong> hainguyen.08052003@gmail.com
+                                    <strong>Email:</strong> {isLogin?.email}
                                 </p>
                                 <p>
-                                    <strong>SĐT:</strong> 0905497210
+                                    <strong>SĐT:</strong> {isLogin?.phone || ""}
                                 </p>
                             </div>
                         </div>
@@ -69,18 +108,17 @@ function CheckoutPage(props) {
                             </h4>
                             <div className="p-4 border space-y-2">
                                 <div className="flex gap-2">
-                                    <span className="border px-4 py-1 text-red-500 font-bold border-red-500 rounded">
-                                        B08
-                                    </span>
-                                    <span className="border px-4 py-1 text-red-500 font-bold border-red-500 rounded">
-                                        B09
-                                    </span>
+                                    {booking?.list_chair?.map((e, index) => (
+                                        <span key={index} className="border px-4 py-1 text-red-500 font-bold border-red-500 rounded">
+                                            {e.title}
+                                        </span>
+                                    ))}
                                 </div>
                                 <p>
-                                    <strong>Số lượng:</strong> 2
+                                    <strong>Số lượng:</strong> {booking?.list_chair?.length || 0}
                                 </p>
                                 <p>
-                                    <strong>Tổng:</strong> 130.000 Đ
+                                <strong>Tổng:</strong> <span>{parseInt(reduced()).toLocaleString('vi-VN')} <sup>đ</sup></span>
                                 </p>
                             </div>
                         </div>
@@ -91,12 +129,23 @@ function CheckoutPage(props) {
                                 THÔNG TIN BẮP NƯỚC
                             </h4>
                             <div className="p-4 border space-y-2">
-                                <h1>COMBO 1 BẮP CARAMEL + 1 NƯỚC: 1</h1>
+                                <div className="">
+                                    {booking?.bill?.map((food, index) => {
+                                        const foodItem = getOjectById(foodSV, food.id_food);
+                                        return (
+                                            <div key={index}>
+                                                <span key={index} className="mr-2">
+                                                    {foodItem?.name}
+                                                </span>
+                                                <p>
+                                                    <strong>Số lượng:</strong> {food?.quantity}
+                                                </p>
+                                            </div>
+                                        )
+                                    })}
+                                </div>
                                 <p>
-                                    <strong>Số lượng:</strong> 2
-                                </p>
-                                <p>
-                                    <strong>Tổng:</strong> 130.000 Đ
+                                    <strong>Tổng:</strong><span> {booking?.totalFood?.toLocaleString('vi-VN') || 0} <sup>đ</sup></span>
                                 </p>
                             </div>
 
@@ -111,38 +160,47 @@ function CheckoutPage(props) {
                         <div className="border p-4 space-y-4">
                             <div className="flex justify-between">
                                 <span>COMBO</span>
-                                <span>75.000 Đ</span>
+                                <span>{parseInt(reduced()).toLocaleString('vi-VN')} VNĐ</span>
                             </div>
                             <div className="flex justify-between">
                                 <span>VÉ</span>
-                                <span>130.000 Đ</span>
+                                <span>{booking?.totalFood?.toLocaleString('vi-VN') || 0} VNĐ</span>
                             </div>
                             <hr />
                             <div className="flex justify-between font-semibold">
                                 <span>TỔNG</span>
-                                <span>205.000 Đ</span>
+                                <span>{booking?.total?.toLocaleString('vi-VN') || 0} VNĐ</span>
                             </div>
 
-                            <div className="space-y-2">
-                                <label className="flex items-center gap-2">
-                                    <input type="radio" name="payment" />
-                                    Momo
-                                </label>
-                                <label className="flex items-center gap-2">
-                                    <input type="radio" name="payment" />
-                                    ZaloPay
-                                </label>
-                                <label className="flex items-center gap-2">
-                                    <input type="radio" name="payment" />
-                                    BIDV
-                                </label>
-                            </div>
                             <div className="mt-2">
-                                <Link to={'/bookingcompleted'}>
-                                    <button className="w-full bg-teal-600 hover:bg-teal-700 text-white py-2 rounded">
-                                        Thanh Toán
-                                    </button>
-                                </Link>
+                                <PayPalScriptProvider options={initialOptions}>
+                                    <PayPalButtons
+                                        style={{ layout: "vertical" }}
+                                        createOrder={(data, actions) => {
+                                            const priceInUSD = (booking.total / 25000).toFixed(2);                            
+                                            return actions.order.create({
+                                                purchase_units: [{
+                                                    amount: {
+                                                        value: priceInUSD,
+                                                        currency_code: "USD"
+                                                    }
+                                                }]
+                                            });
+                                        }}
+                                        onApprove={(data, actions) => {
+                                            return actions.order.capture().then((details) => {
+                                                const transactionId = details.id;
+                                                createSubscription(transactionId);
+                                            });
+                                        }}
+                                        onCancel={() => {
+                                            showNotification('You have canceled the payment. Your order has not been processed', "error");
+                                          }}
+                                        onError={(err) => {
+                                            console.error("PayPal error:", err);
+                                        }}
+                                    />
+                                </PayPalScriptProvider>
                             </div>
                         </div>
                     </div>

@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
-import BoxSearchClient from '../ComponentClient/BoxSearchClient';
 import TableBookingRecords from './TableBookingRecords';
+import BoxSearchClient from '../../../components/BoxSearchRecord';
 
 function MovieBookingRecords(props) {
     const [searchObject, setSearchObject] = useState('');
     return (
         <>
-            <div className="bg-[linear-gradient(-20deg,_#e9defa_0%,_#fbfcdb_100%)]">
+            <div className="bg-[linear-gradient(-20deg,_#e9defa_0%,_#fbfcdb_100%)] p-2">
                 <BoxSearchClient title={"Booking Records"} searchObject={searchObject} setSearchObject={setSearchObject} />
                 <div className="p-3 m-auto">
-                    <TableBookingRecords />
+                    <TableBookingRecords searchObject={searchObject} setSearchObject={setSearchObject} />
                 </div>
             </div>
         </>

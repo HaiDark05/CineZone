@@ -12,9 +12,10 @@ import { ContextCharacters } from '../../../context/CharacterProvider';
 import { ContextCategories } from '../../../context/CategoryProvider';
 import { ContextBooking } from '../../../context/BookingContext';
 import { useNotification } from '../../../context/NotificationContext';
+import { ContextAuth } from '../../../context/AuthProvider';
 
 function MovieScreeningPage(props) {
-     const showNotification = useNotification();
+    const showNotification = useNotification();
     const navigate = useNavigate();
     const { booking, setBooking } = useContext(ContextBooking);
     const { id } = useParams();
@@ -27,6 +28,7 @@ function MovieScreeningPage(props) {
     const { authors } = useContext(ContextAuthors);
     const { actors } = useContext(ContextActors);
     const { characters } = useContext(ContextCharacters);
+    const { isLogin } = useContext(ContextAuth);
     const [screeningShow, setScreeningShow] = useState([]);
     const [date, setDate] = useState(new Date().toLocaleDateString("vi-VN", { day: "2-digit", month: "2-digit", year: "numeric" }));
 
@@ -36,17 +38,32 @@ function MovieScreeningPage(props) {
         window.scrollTo(0, 0);
     }, [id, movieScreens])
 
-    const filterScreenByDate = () => {
-        return screeningShow?.filter(e => formatFirebaseDate(e.release_date) == date);
-    }
+    const filterScreenByDate = () => { return screeningShow?.filter(e => formatFirebaseDate(e.release_date) == date) };
+
 
     const bookingTicket = (id) => {
-
-          if(id !== booking.id_screen) {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0); // reset về đầu ngày
+      
+        // Chuyển "dd/mm/yyyy" → Date object
+        const [day, month, year] = date.split('/');
+        const selectedDate = new Date(`${year}-${month}-${day}`);
+        selectedDate.setHours(0, 0, 0, 0); // reset về đầu ngày
+      
+        if (selectedDate < today) {
+          showNotification('Đã hết hạn chiếu', 'error');
+          return;
+        }
+        if (!isLogin) {
+            showNotification('vui long dang nhap', "error");
+            return;
+        }
+        if (id !== booking.id_screen) {
             showNotification('vui long chon gio chieu', "error");
             return;
-          }
-         navigate("/booking");
+        }
+
+        navigate("/booking");
     }
     return (
         <div className='bg-gradient-to-r from-black via-gray-700 to-zinc-400 text-center'>
@@ -85,7 +102,7 @@ function MovieScreeningPage(props) {
                         >
                             <div className="flex justify-center md:justify-start">
                                 <img src={movie?.imgUrl} alt="" className="w-full md:w-60 h-auto rounded-lg" />
-                            </div>                       
+                            </div>
                             <div className="flex flex-col items-start gap-2">
                                 <h1 className="text-white font-semibold text-[24px] text-center md:text-left">{movie?.name}</h1>
                                 <h1 className="text-orange-400">
@@ -109,7 +126,7 @@ function MovieScreeningPage(props) {
                                 <h1 className="text-white text-center md:text-left">
                                     {movie?.description}
                                 </h1>
-                                <hr className="border-t-2 border-yellow-400 w-full my-2" />                     
+                                <hr className="border-t-2 border-yellow-400 w-full my-2" />
                                 <div className="grid grid-cols-3 md:grid-cols-5 gap-3 mb-4">
                                     {screen?.showtime?.map((time, index) => (
                                         <div onClick={() => setBooking({ ...booking, time: time, id_screen: screen.id })} key={index} className={`px-3 py-1 rounded-sm text-center cursor-pointer transition-all duration-300 ease-in 
@@ -117,13 +134,13 @@ function MovieScreeningPage(props) {
                                             <h1 className="text-white text-sm font-medium">{time}</h1>
                                         </div>
                                     ))}
-                                </div>                                                  
-                                    <button onClick={() => bookingTicket(screen.id)}
-                                        type="submit"
-                                        className="px-4 py-2 bg-green-400 text-white font-semibold text-[20px] rounded-lg transition-all duration-500 ease-linear hover:bg-green-800 self-center md:self-start"
-                                    >
-                                        Đặt vé
-                                    </button>
+                                </div>
+                                <button onClick={() => bookingTicket(screen.id)}
+                                    type="submit"
+                                    className="px-4 py-2 bg-green-400 text-white font-semibold text-[20px] rounded-lg transition-all duration-500 ease-linear hover:bg-green-800 self-center md:self-start"
+                                >
+                                    Đặt vé
+                                </button>
                             </div>
                         </div>
                     )

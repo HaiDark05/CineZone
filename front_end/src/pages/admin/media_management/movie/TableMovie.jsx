@@ -67,18 +67,18 @@ function TableMovie({ setOpen, setMovie, searchObject, movie }) {
         <div className="">
             <TableContainer component={Paper}>
                 <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                    <TableHead>
-                        <TableRow>
-                            <TableCell align="center">#</TableCell>
-                            <TableCell align="center">Img Url</TableCell>
-                            <TableCell align="center">Name Movie</TableCell>
-                            <TableCell align="center">Description</TableCell>
-                            <TableCell align="center">Url Trailer</TableCell>
-                            <TableCell align="center">Duration</TableCell>
-                            <TableCell align="center">Author</TableCell>
-                            <TableCell align="center">Category</TableCell>
-                            <TableCell align="center">Entities</TableCell>
-                            <TableCell align="center">Action</TableCell>
+                    <TableHead sx={{ backgroundColor: '#1F2937' }}>
+                        <TableRow sx={{ whiteSpace: 'nowrap'}}>
+                            <TableCell align="center" sx={{ color: 'white' }}>#</TableCell>
+                            <TableCell align="center" sx={{ color: 'white' }}>Img Url</TableCell>
+                            <TableCell align="center" sx={{ color: 'white' }}>Movie Name</TableCell>
+                            <TableCell align="center" sx={{ color: 'white' }}>Description</TableCell>
+                            <TableCell align="center" sx={{ color: 'white' }}>Url Trailer</TableCell>
+                            <TableCell align="center" sx={{ color: 'white' }}>Duration</TableCell>
+                            <TableCell align="center" sx={{ color: 'white' }}>Author</TableCell>
+                            <TableCell align="center" sx={{ color: 'white' }}>Category</TableCell>
+                            <TableCell align="center" sx={{ color: 'white' }}>Entities</TableCell>
+                            <TableCell align="center" sx={{ color: 'white' }}>Action</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>

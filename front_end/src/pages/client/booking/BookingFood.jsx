@@ -13,7 +13,7 @@ function BookingFood() {
     const [food, setFood] = useState([]);
     const { booking, setBooking } = useContext(ContextBooking);
     const { movieScreens } = useContext(ContextMovieScreens);
-    const [totalFood,setTotalFood] = useState(0);
+    const [totalFood, setTotalFood] = useState(0);
     const [screen, setScreen] = useState("");
 
     useEffect(() => {
@@ -42,7 +42,7 @@ function BookingFood() {
 
             return { ...prev, bill: updatedBill };
         });
-       
+
     };
     const removeFood = (id) => {
         setBooking(prev => {
@@ -67,20 +67,24 @@ function BookingFood() {
 
     useEffect(() => {
         if (!booking?.bill) return;
-      
-        const sum = booking.bill.reduce((total, item) => {
-          const food = getOjectById(foodSV, item.id_food);
-          if (!food) return total;
-      
-          const price = parseInt(food.price) || 0;
-          const discount = parseInt(food.discount) || 0;
-          const finalPrice = (price - (price * discount / 100))*item.quantity;
-      
-          return total + finalPrice;
+
+        const sum = booking?.bill.reduce((total, item) => {
+            const food = getOjectById(foodSV, item.id_food);
+            if (!food) return total;
+
+            const price = parseInt(food.price) || 0;
+            const discount = parseInt(food.discount) || 0;
+            const finalPrice = (price - (price * discount / 100)) * item.quantity;
+
+            return total + finalPrice;
         }, 0);
         setTotalFood(sum);
-      }, [booking]);
-      
+        setBooking(prev => ({
+            ...prev,
+            totalFood: sum,
+        }));
+    }, [booking?.bill, foodSV]);
+
     return (
         <>
             <div className='bg-gradient-to-r from-black via-gray-700 to-zinc-400 lg:w-[80vw] m-auto' >
@@ -93,7 +97,7 @@ function BookingFood() {
                                 <div className="flex-1">
                                     <h3 className="font-bold text-lg">{food?.name}</h3>
                                     <div className="flex items-center gap-2">
-                                        <p className="font-semibold text-red-500 mt-2">{(parseInt(food?.price) - parseInt(food?.price)*parseInt(food?.discount)/100).toLocaleString()} <sup>đ</sup></p>
+                                        <p className="font-semibold text-red-500 mt-2">{(parseInt(food?.price) - parseInt(food?.price) * parseInt(food?.discount) / 100).toLocaleString()} <sup>đ</sup></p>
                                         <p className='font-semibold text-black mt-2 line-through'> {food?.price.toLocaleString()} <sup>đ</sup></p>
                                     </div>
                                 </div>
@@ -119,7 +123,7 @@ function BookingFood() {
                     </div>
                 </div>
             </div>
-            <InfoBooking screen={screen} room={room}  totalFood={totalFood} />
+            <InfoBooking screen={screen} room={room} totalFood={totalFood} />
         </>
 
     );

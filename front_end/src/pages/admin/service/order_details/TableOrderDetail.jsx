@@ -1,28 +1,23 @@
-import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Tooltip } from '@mui/material';
 import React, { useContext, useState } from 'react';
-import { ContextBookings } from '../../../context/BookingsProvider';
-import { ContextBooking } from '../../../context/BookingContext';
-import { getOjectById } from '../../../utils/FunctionConvert';
-import axios from 'axios';
-import { ContextMovies } from '../../../context/MovieProvider';
-import { ContextMovieScreens } from '../../../context/MovieScreenProvider';
-import { ContextCinemas } from '../../../context/CinemasProvider';
-import { ContextLocations } from '../../../context/LocationProvider';
-import { ContextRegions } from '../../../context/RegionsProvider';
-import ModalDelete from '../../../components/ModalDelete';
-import { ContextAuth } from '../../../context/AuthProvider';
+import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Tooltip } from '@mui/material';
+import { ContextBookings } from '../../../../context/BookingsProvider';
+import { ContextMovieScreens } from '../../../../context/MovieScreenProvider';
+import { ContextCinemas } from '../../../../context/CinemasProvider';
+import { ContextLocations } from '../../../../context/LocationProvider';
+import { ContextRegions } from '../../../../context/RegionsProvider';
+import { ContextMovies } from '../../../../context/MovieProvider';
+import { ContextAccounts } from '../../../../context/AccountsProvider';
+import { getOjectById } from '../../../../utils/FunctionConvert';
 
-function TableBookingRecords({ searchObject }) {
-    const { isLogin } = useContext(ContextAuth);
-    const { bookings, setUpdate, update } = useContext(ContextBookings);
-    const { booking } = useContext(ContextBooking);
+function TableOrderDetail({ searchObject }) {
+    const { accounts } = useContext(ContextAccounts);
+    const { bookings } = useContext(ContextBookings);
     const { movieScreens } = useContext(ContextMovieScreens);
     const { cinemas } = useContext(ContextCinemas);
     const { locations } = useContext(ContextLocations);
     const { regions } = useContext(ContextRegions);
     const { movies } = useContext(ContextMovies);
     const [page, setPage] = useState(0);
-    const [openDeleted, setOpenDeleted] = useState(false);
     const [rowsPerPage, setRowsPerPage] = useState(5);
 
     // Xử lý khi thay đổi trang
@@ -37,33 +32,23 @@ function TableBookingRecords({ searchObject }) {
     };
 
     const filteredBookings = bookings.filter((booking) => {
-        const movieName = getOjectById(movies, getOjectById(movieScreens, booking?.id_screen)?.id_movie)?.name || '';
+        const accountName = getOjectById(accounts, booking?.id_account)?.user_name || '';
 
-        // Lọc theo tên phim và ID người dùng
-        if (!searchObject || searchObject.trim() === '') {
-            return booking.id_account === isLogin.id;  // Thêm điều kiện lọc theo người dùng
-        }
+        if (!searchObject || searchObject.trim() === '') return true;
 
-        return movieName.toLowerCase().includes(searchObject.toLowerCase()) && booking.id_account === isLogin.id;  // Thêm điều kiện lọc theo người dùng
+        return accountName.toLowerCase().includes(searchObject.toLowerCase());
     });
-
 
     // Xử lý các hàng hiển thị trong một trang
     const rowsToDisplay = filteredBookings?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
-
-    const handleDelete = async () => {
-        await axios.delete(`http://localhost:8080/api/bookings/${booking.id}`);
-        setUpdate(!update);
-        setOpenDeleted(false);
-    }
-
     return (
         <div>
             <TableContainer component={Paper}>
                 <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                    <TableHead sx={{ backgroundColor: 'black' }}>
-                        <TableRow>
+                    <TableHead sx={{ backgroundColor: '#1F2937' }}>
+                        <TableRow sx={{ whiteSpace: 'nowrap'}}>
                             <TableCell align="center" sx={{ color: 'white' }}>#</TableCell>
+                            <TableCell align="center" sx={{ color: 'white' }}>Name Account</TableCell>
                             <TableCell align="center" sx={{ color: 'white' }}>Name Movie</TableCell>
                             <TableCell align="center" sx={{ color: 'white' }}>Booking Date</TableCell>
                             <TableCell align="center" sx={{ color: 'white' }}>Seat Number</TableCell>
@@ -73,7 +58,6 @@ function TableBookingRecords({ searchObject }) {
                             <TableCell align='center' sx={{ color: 'white' }}>Total Chair</TableCell>
                             <TableCell align='center' sx={{ color: 'white' }}>Total Food</TableCell>
                             <TableCell align='center' sx={{ color: 'white' }}>Total Amount</TableCell>
-                            <TableCell align='center' sx={{ color: 'white' }}>Payment Status</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -84,6 +68,9 @@ function TableBookingRecords({ searchObject }) {
                             >
                                 <TableCell component="th" scope="row" align="center">
                                     {index + 1 + page * rowsPerPage}
+                                </TableCell>
+                                <TableCell align="center">
+                                    {getOjectById(accounts, row?.id_account)?.user_name}
                                 </TableCell>
                                 <TableCell align="center">
                                     {getOjectById(movies, getOjectById(movieScreens, row?.id_screen)?.id_movie)?.name || "no"}
@@ -131,16 +118,13 @@ function TableBookingRecords({ searchObject }) {
                                 <TableCell align="center">
                                     {row?.total.toLocaleString('vi-VN')} <sup>đ</sup>
                                 </TableCell>
-                                <TableCell align="center">
-                                    Đã Thanh Toán
-                                </TableCell>
                             </TableRow>
                         ))}
 
                     </TableBody>
                     <TablePagination
                         rowsPerPageOptions={[5, 10, 15]}
-                        count={filteredBookings.length}
+                        count={bookings.length}
                         rowsPerPage={rowsPerPage}
                         page={page}
                         onPageChange={handleChangePage}
@@ -148,9 +132,8 @@ function TableBookingRecords({ searchObject }) {
                     />
                 </Table>
             </TableContainer>
-            <ModalDelete openDeleted={openDeleted} setOpenDeleted={setOpenDeleted} handleDelete={handleDelete} />
         </div>
     );
 }
 
-export default TableBookingRecords;
+export default TableOrderDetail;

@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { IoIosInformationCircleOutline } from "react-icons/io";
 import Select from '@mui/joy/Select';
 import Option from '@mui/joy/Option';
@@ -29,6 +29,10 @@ function HomePage(props) {
   const [showMovie, setShowMovie] = useState([]);
   const icons = [FaTicket, FaRegBookmark, CiHeart, IoIosInformationCircleOutline];
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   const handleChange = (name) => (event, newValue) => {
     setSearchItem((prevData) => ({
       ...prevData,
@@ -49,7 +53,7 @@ function HomePage(props) {
 
         >
           {regions.map((region, index) => (
-            <Option value={region.id} >{region?.name}</Option>
+            <Option key={index} value={region.id} >{region?.name}</Option>
           ))}
 
         </Select>
@@ -60,8 +64,8 @@ function HomePage(props) {
           name='id_location'
           onChange={handleChange("id_location")}
         >
-          {filterListById(locations, searchItem.id_region, "id_region").map((location) => (
-            <Option key={location.id} value={location.id}>
+          {filterListById(locations, searchItem.id_region, "id_region").map((location, index) => (
+            <Option key={index} value={location.id}>
               {location?.name}
             </Option>
           ))}
@@ -74,7 +78,7 @@ function HomePage(props) {
           onChange={handleChange("id_cinema")}
         >
           {filterListById(cinemas, searchItem.id_location, "id_location").map((cinema, index) => (
-            <Option key={cinema.id} value={cinema.id}>
+            <Option key={index} value={cinema.id}>
               {cinema?.name}
             </Option>
           ))}
@@ -105,7 +109,7 @@ function HomePage(props) {
           onChange={handleChange("id_movieScreen")}
         >
           {filterListById(movieScreens, searchItem.id_movie, "id_movie").map((moviescreen, index) => (
-            <Option key={moviescreen.id} value={moviescreen.id}>
+            <Option key={index} value={moviescreen.id}>
               {moviescreen?.release_date}
             </Option>
           ))}

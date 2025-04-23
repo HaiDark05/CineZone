@@ -19,12 +19,12 @@ function ClientDashBoard(props) {
         handleClose();
     };
     const handleCloseSignUp = () => setOpenSignUp(false);
+    
     return (
         <div className=''>
             <div className="sticky top-0 z-50">
                 <HeaderClient handleOpen={handleOpen} />
             </div>
-            {/* Nội dung chính có padding-top để không bị che */}
             <div className="">
                 <ClientRouters />
                 <FooterClient />

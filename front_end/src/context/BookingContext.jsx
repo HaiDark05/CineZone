@@ -1,12 +1,12 @@
 import React, { createContext, useState } from 'react';
 export const ContextBooking = createContext();
- const inner = {time : "", id_screen : "", list_chair : [], bill : []}
+ const inner = {time : "", id_screen : "", list_chair : [], bill : [], id_room : ""}
 export const BookingContext = ({children}) => {
 
     const [booking, setBooking] = useState(inner);
     
     return (
-            <ContextBooking.Provider value={{booking, setBooking}}>
+            <ContextBooking.Provider value={{booking, setBooking , inner}}>
                 {children}
             </ContextBooking.Provider>
         );

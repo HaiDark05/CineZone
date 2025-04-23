@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Dialog, DialogTitle, DialogContent, DialogActions, TextField, Button, IconButton, Typography, InputAdornment } from "@mui/material";
 import { IoMdLock } from "react-icons/io";
 import { IoIosMail } from "react-icons/io";
@@ -6,25 +6,69 @@ import { MdVisibility } from "react-icons/md";
 import { MdVisibilityOff } from "react-icons/md";
 import { MdClose } from "react-icons/md";
 import { FaGooglePlusG } from "react-icons/fa";
+import { ContextAccounts } from "../../../context/AccountsProvider";
+import { useNotification } from "../../../context/NotificationContext";
+import { ContextAuth } from "../../../context/AuthProvider";
+import { useNavigate } from "react-router-dom";
 
-function ModalLogin({ open, handleClose,handleOpenSignUp }) {
+const inner = { user_or_email: "", pass_word: "" }
+function ModalLogin({ open, handleClose, handleOpenSignUp }) {
     const [showPassword, setShowPassword] = useState(false);
+    const { isLogin, saveLocal } = useContext(ContextAuth);
+    const { accounts } = useContext(ContextAccounts);
+    const [errors, setErrors] = useState(inner);
+    const [login, setLogin] = useState(inner);
+    const navigate = useNavigate();
+    const showNotification = useNotification();
+    const handleChange = (event) => {
+        const { name, value } = event.target;
+        setLogin((prevData) => ({
+            ...prevData,
+            [name]: value,
+        }));
+    }
+    const validation = () => {
+        const newErrors = {};
+        newErrors.user_or_email = login.user_or_email ? "" : "Vui long nhap name hoac email";
+        newErrors.pass_word = login.pass_word ? "" : "vui long nhap password";
+        setErrors(newErrors);
+        return Object.values(newErrors).every(e => e == "");
+    }
+    console.log(errors);
+    console.log(login);
+    
+    const handleSubmit = async () => {
+        if (!validation()) {
+            return;
+        }
+       const result = accounts.find(e => (e.email == login.user_or_email || e.user_name == login.user_or_email) && (e.pass_word == login.pass_word));
+       console.log(result);
+       
+        if(!result) {
+            showNotification("Error submitting account!", "error");
+            return;
+        }
+        saveLocal("isLogin",result);
+        showNotification("You have successfully logged in!", "success");
+        handleClose();
+        navigate("/");
+    }
 
     return (
-        <Dialog 
-            open={open} 
-            onClose={handleClose} 
-            maxWidth="xs" 
+        <Dialog
+            open={open}
+            onClose={handleClose}
+            maxWidth="xs"
             fullWidth
             className="transition-opacity duration-300 ease-in-out"
         >
             {/* Close Button */}
             <IconButton
-                    sx={{ position: "absolute", top: 8, right: 8 }}
-                    onClick={handleClose}
-                >
-                    <MdClose className="text-[20px]" />
-                </IconButton>
+                sx={{ position: "absolute", top: 8, right: 8 }}
+                onClick={handleClose}
+            >
+                <MdClose className="text-[20px]" />
+            </IconButton>
 
             {/* Title */}
             <DialogTitle className="text-center text-2xl font-bold text-gray-800">
@@ -36,9 +80,13 @@ function ModalLogin({ open, handleClose,handleOpenSignUp }) {
                 <TextField
                     fullWidth
                     label="Username Or Email"
+                    name="user_or_email"
                     variant="outlined"
                     placeholder="Enter your username or email"
                     margin="dense"
+                    onChange={handleChange}
+                    error={!!errors.user_or_email}
+                    helperText={errors.user_or_email}
                     InputProps={{
                         startAdornment: (
                             <InputAdornment position="start">
@@ -53,9 +101,13 @@ function ModalLogin({ open, handleClose,handleOpenSignUp }) {
                     fullWidth
                     type={showPassword ? "text" : "password"}
                     label="Password"
+                    name="pass_word"
                     variant="outlined"
                     placeholder="Your password"
+                    onChange={handleChange}
                     margin="dense"
+                    error={!!errors.pass_word}
+                    helperText={errors.pass_word}
                     InputProps={{
                         startAdornment: (
                             <InputAdornment position="start">
@@ -79,6 +131,7 @@ function ModalLogin({ open, handleClose,handleOpenSignUp }) {
 
                 {/* Login Button */}
                 <Button
+                onClick={handleSubmit}
                     fullWidth
                     variant="contained"
                     className="bg-gradient-to-r from-blue-500 to-purple-600 text-white font-bold py-2 rounded-lg hover:opacity-90 transition-all duration-300"

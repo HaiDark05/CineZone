@@ -12,7 +12,6 @@ export const getNowShowingMovies = (data) => {
     const today = new Date(); // Lấy ngày hôm nay
     const threeDaysLater = new Date();
     threeDaysLater.setDate(today.getDate() + 3); // Ngày sau 3 ngày
-
     return data.filter(e => {
         const releaseDate = new Date(e.release_date);
         return releaseDate >= today && releaseDate <= threeDaysLater;

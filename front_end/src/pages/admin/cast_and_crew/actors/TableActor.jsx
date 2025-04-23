@@ -56,13 +56,13 @@ function TableActor({ setOpen, setActor, searchObject, actor }) {
         <div className="">
             <TableContainer component={Paper}>
                 <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                    <TableHead>
-                        <TableRow>
-                            <TableCell align="center">#</TableCell>
-                            <TableCell align="center">Img Url</TableCell>
-                            <TableCell align="center">Name Actor</TableCell>
-                            <TableCell align="center">Description</TableCell>
-                            <TableCell align="center">Action</TableCell>
+                    <TableHead sx={{ backgroundColor: '#1F2937' }}>
+                        <TableRow sx={{ whiteSpace: 'nowrap'}}>
+                            <TableCell align="center" sx={{ color: 'white' }}>#</TableCell>
+                            <TableCell align="center" sx={{ color: 'white' }}>Img Url</TableCell>
+                            <TableCell align="center" sx={{ color: 'white' }}>Actor Name</TableCell>
+                            <TableCell align="center" sx={{ color: 'white' }}>Description</TableCell>
+                            <TableCell align="center" sx={{ color: 'white' }}>Action</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>

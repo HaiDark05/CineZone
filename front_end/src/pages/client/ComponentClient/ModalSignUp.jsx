@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import {
     Dialog,
     DialogTitle,
@@ -15,15 +15,21 @@ import { IoIosPerson } from "react-icons/io";
 import { MdVisibility, MdVisibilityOff, MdClose } from "react-icons/md";
 import { FaGooglePlusG } from "react-icons/fa";
 import { IoIosMail } from "react-icons/io";
-import avatarLogo from "../../../assets/avatar/avatar_default.jpg"
 import axios from 'axios';
+import { ContextAuth } from '../../../context/AuthProvider';
+import { avatarDefault, ROLES } from '../../../utils/Containts';
+import { useNotification } from '../../../context/NotificationContext';
+import { ContextAccounts } from '../../../context/AccountsProvider';
 
-const inner = { id_role: "", imgUrl: avatarLogo, user_name: "", email: "", pass_word: "", re_pass_word: "", phone: "", gender: "" }
+
+const inner = { id_role: ROLES.USER, imgUrl: avatarDefault, user_name: "", email: "", pass_word: "", re_pass_word: "", phone: "", gender: "" }
 function ModalSignUp({ openSignUp, handleCloseSignUp, handleOpen }) {
     const [showPassword, setShowPassword] = useState(false);
+    const showNotification = useNotification();
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-    const [account, setAccount] = useState(inner);
-
+    const [account, setAccount] = useState(inner); 
+    const { isLogin, saveLocal } = useContext(ContextAuth);
+    const { update, setUpdate } = useContext(ContextAccounts);
     const handleChange = (event) => {
         const { name, value } = event.target;
         setAccount((prevData) => ({
@@ -34,10 +40,13 @@ function ModalSignUp({ openSignUp, handleCloseSignUp, handleOpen }) {
     
     const handleSubmit = async () => {
         const {re_pass_word, ...newAccount } = account ;
-       const accountLogin =   await axios.post("http://localhost:8080/api/accounts", newAccount);
-       console.log(accountLogin); 
+        const accountLogin =  await axios.post("http://localhost:8080/api/accounts", newAccount);
+        saveLocal("isLogin",accountLogin.data.account);
+        setUpdate(!update);
+        showNotification("Completed Sign Up", "success")
+        handleCloseSignUp();
     }
-
+    
     return (
         <div>
             <Dialog
@@ -101,6 +110,7 @@ function ModalSignUp({ openSignUp, handleCloseSignUp, handleOpen }) {
                         placeholder="Create a password"
                         name='pass_word'
                         margin="dense"
+                        onChange={handleChange}
                         InputProps={{
                             startAdornment: (
                                 <InputAdornment position="start">

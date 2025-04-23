@@ -75,6 +75,12 @@ function BookingComplete(props) {
                             </StyledTableRow>
                             <StyledTableRow key={""}>
                                 <StyledTableCell component="th" scope="row">
+                                    Room
+                                </StyledTableCell>
+                                <StyledTableCell align="left">Phong 103</StyledTableCell>
+                            </StyledTableRow>
+                            <StyledTableRow key={""}>
+                                <StyledTableCell component="th" scope="row">
                                     Rạp
                                 </StyledTableCell>
                                 <StyledTableCell align="left">RIO | đường 2 tháng 9 - Quận Liên Chiểu - Thành Phố Đà Nẵng</StyledTableCell>

@@ -1,9 +1,13 @@
 import React, { useContext } from 'react';
-import Modal from '@mui/material/Modal';
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
+import {
+    Dialog,
+    DialogTitle,
+    DialogContent,
+    DialogActions,
+    Button,
+    TextField,
+    Box
+  } from '@mui/material';
 import { ImFolderUpload } from "react-icons/im";
 import axios from 'axios';
 import { useNotification } from '../../../../context/NotificationContext';
@@ -79,20 +83,16 @@ function ModalActor({ open, handleClose, actor, setActor, validation, errors }) 
     };
 
     return (
-        <Modal
-            open={open}
-            onClose={handleClose}
-            aria-labelledby="modal-modal-title"
-            aria-describedby="modal-modal-description"
-        >
-            <Box sx={style}>
-                <Typography id="modal-modal-title" variant="h6" component="h2">
-                    {actor.id ? "Update Actor" : "Add New Actor"}
-                </Typography>
+        <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
+            <DialogTitle>
+                {actor.id ? "Update Actor" : "Add New Actor"}
+            </DialogTitle>
+
+            <DialogContent dividers>
                 <Box
                     component="form"
                     sx={{
-                        mt: 2,
+                        mt: 1,
                         display: 'flex',
                         flexDirection: 'column',
                         gap: 2,
@@ -123,8 +123,9 @@ function ModalActor({ open, handleClose, actor, setActor, validation, errors }) 
                     <Button
                         variant="contained"
                         component="label"
+                        startIcon={<ImFolderUpload />}
                     >
-                        <ImFolderUpload />
+                        Upload Image
                         <input
                             type="file"
                             hidden
@@ -132,23 +133,26 @@ function ModalActor({ open, handleClose, actor, setActor, validation, errors }) 
                             onChange={handleFileChange}
                         />
                     </Button>
-                    <Box mt={2} display="flex" justifyContent="center">
+
+                    <Box mt={1} display="flex" justifyContent="center">
                         <img
                             src={actor.imgUrl}
                             alt="Preview"
                             style={{ width: 100, height: 100, objectFit: 'cover', borderRadius: 8 }}
                         />
                     </Box>
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={handleSubmit}
-                    >
-                        Submit
-                    </Button>
                 </Box>
-            </Box>
-        </Modal>
+            </DialogContent>
+
+            <DialogActions>
+                <Button onClick={handleClose} color="secondary">
+                    Cancel
+                </Button>
+                <Button onClick={handleSubmit} color="primary" variant="contained">
+                    Submit
+                </Button>
+            </DialogActions>
+        </Dialog>
     );
 }
 

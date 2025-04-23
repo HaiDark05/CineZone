@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect} from 'react';
 import { ContextCinemas } from '../../../context/CinemasProvider';
 import { ContextMovies } from '../../../context/MovieProvider';
 import { ContextBooking } from '../../../context/BookingContext';
@@ -9,6 +9,7 @@ import { ContextTypeChairs } from '../../../context/TypeChairsProvider';
 import { ContextMovieScreens } from '../../../context/MovieScreenProvider';
 import { ContextFood } from '../../../context/FoodProvider';
 
+
 function InfoBooking({ screen, room, totalFood }) {
     const { cinemas } = useContext(ContextCinemas);
     const { movies } = useContext(ContextMovies);
@@ -16,7 +17,6 @@ function InfoBooking({ screen, room, totalFood }) {
     const { rooms } = useContext(ContextRooms);
     const { typeChairs } = useContext(ContextTypeChairs);
     const { movieScreens } = useContext(ContextMovieScreens);
-   
     const { foodSV } = useContext(ContextFood);
 
     const location = useLocation();
@@ -29,6 +29,10 @@ function InfoBooking({ screen, room, totalFood }) {
             return sum + (chairType?.price || 0) * (screen?.ratio || 1);
         }, 0) || 0;
     };
+
+    useEffect(() => {
+        setBooking({ ...booking, total: reduced() + totalFood });
+    }, [totalFood]);
     return (
         <div>
             <div className="fixed bottom-0 left-0 w-full bg-white shadow-lg p-4 border-t z-20">
@@ -57,7 +61,7 @@ function InfoBooking({ screen, room, totalFood }) {
                         <ul className="space-y-2 text-[18px] font-semibold">
                             <li>Ghế:
                                 {booking?.list_chair?.map((e, index) => (
-                                    <span className='font-normal ml-1'>{e.title}</span>
+                                    <span key={index} className='font-normal ml-1'>{e.title}</span>
                                 ))}
                             </li>
 
@@ -74,7 +78,7 @@ function InfoBooking({ screen, room, totalFood }) {
                                 })}
                             </span>
                             </li>
-                            <li>Tổng Tiền: <span className='font-normal'>{(reduced() + totalFood).toLocaleString('vi-VN') || 0} <sup>đ</sup></span></li>
+                            <li>Tổng Tiền: <span className='font-normal'>{((reduced() || 0) + (totalFood || 0)).toLocaleString('vi-VN')} <sup>đ</sup></span></li>
                         </ul>
                         <ul className="hidden md:block space-y-2 font-semibold">
                             <li>Tiền vé: <span className='font-normal'>{parseInt(reduced()).toLocaleString('vi-VN')} <sup>đ</sup></span></li>

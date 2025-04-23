@@ -30,7 +30,7 @@ function MovieScreening(props) {
     return (
         <>
             <BoxSearch addItem={addItem} title={"MovieScreen"} nameBtn={"MovieScreen"} setSearchObject={setSearchObject} />
-            <div className="">
+            <div className="p-3 m-auto">
                 <TableMovieScreening setOpen={setOpen} movieScreen={movieScreen} setMovieScreen={setMovieScreen} searchObject={searchObject}/>
             </div>
             <ModalMovieScreening handleClose={handleClose} open={open} movieScreen={movieScreen} errors={errors} validation={validation} setMovieScreen={setMovieScreen}/>

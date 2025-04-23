@@ -9,6 +9,7 @@ import InfoBooking from './InfoBooking';
 function BookingPage(props) {
     const { booking, setBooking } = useContext(ContextBooking);
     const { movieScreens } = useContext(ContextMovieScreens);
+    
     const { rooms } = useContext(ContextRooms);
     const [screen, setScreen] = useState("")
     const [room, setRoom] = useState({});

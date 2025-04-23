@@ -1,9 +1,13 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { ContextRegions } from '../../../context/RegionsProvider';
 import { Link } from 'react-router-dom';
 
 function MovieScreenRegion(props) {
     const { regions } = useContext(ContextRegions);
+
+    useEffect(() => {
+        window.scrollTo(0, 0);
+      }, []);
 
     return (
         <div className='bg-gradient-to-r from-black via-gray-700 to-zinc-400'>

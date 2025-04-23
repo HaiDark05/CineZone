@@ -50,18 +50,18 @@ function TableMovieScreening({ setOpen, setMovieScreen, searchObject, movieScree
         <div>
             <TableContainer component={Paper}>
                 <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                    <TableHead>
-                        <TableRow>
-                            <TableCell align="center">#</TableCell>
-                            <TableCell align="center">Movie</TableCell>
-                            <TableCell align="center">Room</TableCell>
-                            <TableCell align="center">Cinema</TableCell>
-                            <TableCell align="center">Location</TableCell>
-                            <TableCell align="center">Region</TableCell>
-                            <TableCell align="center">Release date</TableCell>
-                            <TableCell align="center">Screening time</TableCell>
-                            <TableCell align="center">Ratio</TableCell>
-                            <TableCell align="center">Action</TableCell>
+                    <TableHead sx={{ backgroundColor: '#1F2937' }}>
+                        <TableRow sx={{ whiteSpace: 'nowrap'}}>
+                            <TableCell align="center" sx={{ color: 'white' }}>#</TableCell>
+                            <TableCell align="center" sx={{ color: 'white' }}>Movie Name</TableCell>
+                            <TableCell align="center" sx={{ color: 'white' }}>Room</TableCell>
+                            <TableCell align="center" sx={{ color: 'white' }}>Cinema</TableCell>
+                            <TableCell align="center" sx={{ color: 'white' }}>Location</TableCell>
+                            <TableCell align="center" sx={{ color: 'white' }}>Region</TableCell>
+                            <TableCell align="center" sx={{ color: 'white' }}>Release date</TableCell>
+                            <TableCell align="center" sx={{ color: 'white' }}>Screening time</TableCell>
+                            <TableCell align="center" sx={{ color: 'white' }}>Ratio</TableCell>
+                            <TableCell align="center" sx={{ color: 'white' }}>Action</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>

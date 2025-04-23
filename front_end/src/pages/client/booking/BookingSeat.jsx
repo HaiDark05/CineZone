@@ -6,7 +6,9 @@ import seatSelect from '../../../assets/seat-selected.png'
 import { ContextMovieScreens } from '../../../context/MovieScreenProvider';
 import { ContextRooms } from '../../../context/RoomsProvider';
 import { ContextBooking } from '../../../context/BookingContext';
-import { ChairA } from '../../../utils/Containts';
+import { ChairA, chairDefault } from '../../../utils/Containts';
+import { ContextBookings } from '../../../context/BookingsProvider';
+import { useNotification } from '../../../context/NotificationContext';
 
 const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: '#fff',
@@ -24,9 +26,12 @@ function BookingSeat({ row, screen, setRoom }) {
     const { typeChairs } = useContext(ContextTypeChairs);
     const { rooms } = useContext(ContextRooms);
     const { booking, setBooking } = useContext(ContextBooking);
+    const { bookings } = useContext(ContextBookings);
+    const showNotification = useNotification();
     useEffect(() => {
         generateGrid();
     }, [row]);
+
     const generateGrid = () => {
         const rows = parseInt(row?.rows);
         const cols = parseInt(row?.cols);
@@ -40,9 +45,15 @@ function BookingSeat({ row, screen, setRoom }) {
     }
 
     const showImgChairChoose = (rowd, col) => {
-        const result = row.list_chair.find(e => e.row == rowd & e.col == col);
-        const resultboking = booking.list_chair.find(e => e.row == rowd & e.col == col);
-        return result?.id_type_chair && resultboking ? seatSelect : getOjectById(typeChairs, result?.id_type_chair)?.imgUrl;
+
+        if(checkBooking(rowd, col)) {
+             return chairDefault;
+        }else {       
+            const result = row.list_chair.find(e => e.row == rowd & e.col == col);
+            const resultboking = booking.list_chair.find(e => e.row == rowd & e.col == col);
+            return result?.id_type_chair && resultboking ? seatSelect : getOjectById(typeChairs, result?.id_type_chair)?.imgUrl;
+        }
+
     }
     const getRoom = (id) => {
         const newRoom = getOjectById(rooms, id);
@@ -51,6 +62,11 @@ function BookingSeat({ row, screen, setRoom }) {
     }
 
     const bookingChair = (rowIndex, colIndex) => {
+        if(checkBooking(rowIndex, colIndex)) {
+            showNotification('Ghe da duoc dat!', "error");
+            return 
+       }
+
         if (!showImgChair(rowIndex, colIndex)) {
             return;
         }
@@ -69,6 +85,18 @@ function BookingSeat({ row, screen, setRoom }) {
 
     const nameChair = (rowIndex, colIndex) => {
         return ChairA[rowIndex] + colIndex;
+    }
+  console.log(bookings);
+  
+    const checkBooking = (row,col) => {
+        
+        const check = bookings.some(e => 
+             booking.id_room == e.id_room &&
+             booking.id_screen == e.id_screen &&
+             booking.time == e.time &&
+            e.list_chair.some(c => c.row == row && c.col == col)
+        );
+      return check ;
     }
     return (
         row && <div className="grid md:grid-cols-[1fr_3fr_1fr] grid-cols-1 gap-4">

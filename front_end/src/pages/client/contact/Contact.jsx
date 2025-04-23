@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Box, Typography, IconButton, TextField, Button } from "@mui/material";
+import React, { useEffect, useState } from 'react';
+import { Box, Typography, TextField } from "@mui/material";
 import { FaFacebookF } from "react-icons/fa";
 import { FaLocationDot } from "react-icons/fa6";
 import { FaPhoneAlt } from "react-icons/fa";
@@ -10,6 +10,11 @@ import { FaTiktok } from "react-icons/fa";
 const inner = { name: "", email: "", phone: "", message: "" }
 function Contact(props) {
     const [formContact, setFormContact] = useState(inner);
+
+    useEffect(() => {
+        window.scrollTo(0, 0);
+      }, []);
+
     const handleChange = (event) => {
         const { name, value } = event.target;
         setFormContact((prevData) => ({
@@ -47,16 +52,15 @@ function Contact(props) {
                     </div>
                 </div>
                 <div className="flex justify-center gap-4 mt-4">
-                    <a href="#" className="text-blue-600 text-xl hover:scale-110 transition"><FaFacebookF /></a>
-                    <a href="#" className="text-blue-400 text-xl hover:scale-110 transition"><FaTwitter /></a>
-                    <a href="#" className="text-red-500 text-xl hover:scale-110 transition"><FaGoogle /></a>
-                    <a href="#" className="text-black text-xl hover:scale-110 transition"><FaTiktok /></a>
+                    <h1 className="text-blue-600 text-xl hover:scale-110 transition"><FaFacebookF /></h1>
+                    <h1 className="text-blue-400 text-xl hover:scale-110 transition"><FaTwitter /></h1>
+                    <h1 className="text-red-500 text-xl hover:scale-110 transition"><FaGoogle /></h1>
+                    <h1 className="text-black text-xl hover:scale-110 transition"><FaTiktok /></h1>
                 </div>
             </div>
             <div className="">
                 <Box
                     component="form"
-                    // onSubmit={handleSubmit}
                     sx={{
                         bgcolor: "white",
                         p: 4,

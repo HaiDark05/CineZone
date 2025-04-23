@@ -1,6 +1,11 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 function SupportPage(props) {
+
+    useEffect(() => {
+        window.scrollTo(0, 0);
+      }, []);
+
     return (
         <div className="bg-gradient-to-r from-black via-gray-700 to-zinc-400">
             <div className="w-[70%] m-auto flex p-4">

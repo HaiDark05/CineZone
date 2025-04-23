@@ -12,7 +12,6 @@ import CharacterProvider from './context/CharacterProvider';
 import LocationProvider from './context/LocationProvider';
 import MovieProvider from './context/MovieProvider';
 import TypeChairsProvider from './context/TypeChairsProvider';
-import ChairsProvider from './context/ChairsProvider';
 import CinemasProvider from './context/CinemasProvider';
 import RegionsProvider from './context/RegionsProvider';
 import FoodProvider from './context/FoodProvider';
@@ -20,6 +19,8 @@ import RoomsProvider from './context/RoomsProvider';
 import MovieScreenProvider from './context/MovieScreenProvider';
 import BookingContext from './context/BookingContext';
 import AuthProvider from './context/AuthProvider';
+import AccountsProvider from './context/AccountsProvider';
+import BookingsProvider from './context/BookingsProvider';
 
 // Danh sách tất cả Providers
 const providers = [
@@ -31,14 +32,15 @@ const providers = [
   LocationProvider,
   MovieProvider,
   TypeChairsProvider,
-  ChairsProvider,
   CinemasProvider,
   RegionsProvider,
   FoodProvider,
   RoomsProvider,
   MovieScreenProvider,
   BookingContext,
-  AuthProvider
+  AuthProvider,
+  AccountsProvider,
+  BookingsProvider,
 ];
 
 // Hàm bọc `App` trong tất cả các Providers

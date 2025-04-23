@@ -9,13 +9,13 @@ import Characters from '../pages/admin/cast_and_crew/characters/Characters';
 import Authors from '../pages/admin/cast_and_crew/authors/Authors';
 import Locations from '../pages/admin/region/locations/Locations';
 import Cinema from '../pages/admin/region/cinema/Cinema';
-import Chairs from '../pages/admin/seating/chairs/Chairs';
 import Rooms from '../pages/admin/seating/rooms/Rooms';
 import TypeChairs from '../pages/admin/seating/type_chairs/TypeChairs';
 import OrderDetails from '../pages/admin/service/order_details/OrderDetails';
-import Tickets from '../pages/admin/service/tickets/Tickets';
 import Food from '../pages/admin/service/food/Food';
 import Regions from '../pages/admin/region/regions/Regions';
+import ManagerUser from '../pages/admin/manager_user/ManagerUser';
+import ProfileAdmin from '../pages/admin/profile_admin/ProfileAdmin';
 
 
 
@@ -63,10 +63,6 @@ function AdminRouters(props) {
             element: <Cinema />,
         },
         {
-            path: "seating/Chairs",
-            element: <Chairs />,
-        },
-        {
             path: "seating/Room",
             element: <Rooms />,
         },
@@ -79,13 +75,18 @@ function AdminRouters(props) {
             element: <OrderDetails />,
         },
         {
-            path: "service/Tickets",
-            element: <Tickets />,
-        },
-        {
             path: "service/Food",
             element: <Food />,
+        },
+        {
+            path: "/customeraccount",
+            element: <ManagerUser/>,
+        },
+        {
+            path: "/profileadmin",
+            element: <ProfileAdmin/>,
         }
+        
     ]
     return (
         <Routes>

@@ -9,6 +9,7 @@ import chairChoose from "../assets/Chairs/chairs.png"
 import informed from "../assets/informed.png"
 import appleStore from "../assets/applestore.png"
 import androidStore from "../assets/androidstore.png"
+import avatarImg from "../assets/avatar/avatar_default.avif"
 
 export const logos = logo ;
 export const chairSelect = chairChoose;
@@ -16,6 +17,7 @@ export const confirm = informed;
 export const appleStoreApp = appleStore;
 export const androidStoreApp = androidStore;
 export const chairDefault = chai;
+export const avatarDefault = avatarImg;
 export const cloud_name = "dutvlfn32";
 export const upload = "movie_booking";
 export const apiKey = '158845455227221';  // Replace with your actual API key
@@ -94,11 +96,6 @@ export const menus = [
             },
             {
                 id: 2,
-                title: "Chairs",
-                path: "seating/Chairs"
-            },
-            {
-                id: 3,
                 title: "TypeChairs",
                 path: "seating/TypeChairs"
             }
@@ -111,16 +108,11 @@ export const menus = [
         items: [
             {
                 id: 1,
-                title: "Tickets",
-                path: "service/Tickets"
-            },
-            {
-                id: 2,
                 title: "OrderDetails",
                 path: "service/OrderDetails"
             },
             {
-                id: 3,
+                id: 2,
                 title: "Food",
                 path: "service/Food"
             }
@@ -142,25 +134,72 @@ export const menu_client = [
     },
     {
         id: 3,
-        title : "Booking Record",
-        path:"/moviebookingrecord"
-    },
-    {
-        id: 4,
         title : "Support",
         path:"/supports"
     },
     {
-        id: 5,
+        id: 4,
         title : "Contact",
         path:"/contacts"
     },
     {
-        id: 6,
+        id: 5,
         title : "Member",
         path:"/members"
     }
 ];
 
+export const menuMember = [
+    {
+      id: 1,
+      title: "MemberPolicy",
+      path: "/members/memberpolicy"
+    },
+    {
+      id: 2,
+      title: "PrivacyPolicy",
+      path: "/members/privacypolicy"
+    },
+    {
+      id: 3,
+      title: "PaymentPolicy",
+      path: "/members/paymentpolicy"
+    },
+    {
+      id: 4,
+      title: "TheaterRules",
+      path: "/members/threaterrules"
+    }
+  ];
+  
+
+
 export const ChairA = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 
-    'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
+    'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
+export const SECRET_KEY = "0775493859" ;
+export const ROLES = {
+    ADMIN: 'admin',        // Quản trị viên cấp cao
+    USER: 'user',          // Người dùng thông thường
+  };
+
+export const initialOptions = {
+    "client-id": "AVC0OJzKvJYZHscCpkfaWJGTIe6FclH6Avpyc86pMjx12Iy9ykrQalJ4FORGU5F-89x0gbBCxuUP9sSM",
+    currency: "USD",
+    intent: "capture"
+  };
+
+  export const COLORS = [
+    '#0088FE', // Blue
+    '#00C49F', // Teal
+    '#FFBB28', // Yellow
+    '#FF8042', // Orange
+    '#A28FFB', // Lavender
+    '#F765A3', // Pink
+    '#FF6B6B', // Coral
+    '#4CAF50', // Green
+    '#FFD700', // Gold
+    '#8A2BE2', // BlueViolet
+    '#FF4500', // OrangeRed
+    '#20B2AA'  // LightSeaGreen
+  ];
+  
