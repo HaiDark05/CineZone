@@ -3,7 +3,6 @@ const {
   getAllAccount,
   getAccountById,
   addAccount,
-  getInforAccount,
   updateAccount,
   deleteAccount,
 } = require("../controllers/accountsController");

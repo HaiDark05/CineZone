@@ -31,9 +31,9 @@ const getAccountById = async (req, res) => {
 
 const addAccount = async (req, res) => {
   try {
-    const { id_role, imgUrl, user_name, email, pass_word, phone, gender } = req.body;
+    const { id_role, imgUrl, user_name, email, pass_word } = req.body;
     const docRef = accountsCollection.doc();
-    const account = new Accounts(docRef.id, id_role, imgUrl, user_name, email, pass_word, phone, gender);
+    const account = new Accounts(docRef.id, id_role, imgUrl, user_name, email, pass_word);
     
     // Lưu vào Firestore
     await docRef.set(account.toFirestore());
@@ -48,8 +48,8 @@ const addAccount = async (req, res) => {
 
 const updateAccount = async (req, res) => {
   try {
-    const {id_role, imgUrl, user_name, email, pass_word, phone, gender } = req.body;
-    await accountsCollection.doc(req.params.id).update({ id_role, imgUrl, user_name, email, pass_word, phone, gender });
+    const {id_role, imgUrl, user_name, email, pass_word } = req.body;
+    await accountsCollection.doc(req.params.id).update({ id_role, imgUrl, user_name, email, pass_word });
     res.json({ message: "Account updated" });
   } catch (error) {
     res.status(500).json({ error: error.message });
