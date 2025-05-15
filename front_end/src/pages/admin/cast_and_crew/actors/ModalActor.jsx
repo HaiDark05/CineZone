@@ -54,7 +54,7 @@ function ModalActor({ open, handleClose, actor, setActor, validation, errors }) 
                 showNotification("Actor added successfully!", "success");
             }
 
-            handleClose(); // Đóng modal
+            handleClose();
             setUpdate((prev) => !prev); // Cập nhật lại state để load lại dữ liệu
 
         } catch (error) {

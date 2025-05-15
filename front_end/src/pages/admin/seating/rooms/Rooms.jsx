@@ -2,7 +2,6 @@ import React, { useContext, useState } from 'react';
 import BoxSearch from '../../../../components/BoxSearch';
 import ModalRoom from './ModalRoom';
 import ModalChooseChair from './ModalChooseChair';
-import { ContextTypeChairs } from '../../../../context/TypeChairsProvider';
 import TableRoom from './TableRoom';
 
 const inner = { name: "", rows: 0, cols: 0, list_chair: [], id_cinema: "", id_location: "", id_region: "" }

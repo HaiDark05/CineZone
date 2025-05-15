@@ -10,18 +10,22 @@ import MovieScreeningPage from '../pages/client/movie_screening/MovieScreeningPa
 import Members from '../pages/client/member/Members';
 import BookingFood from '../pages/client/booking/BookingFood';
 import CheckoutPage from '../pages/client/booking/CheckoutPage';
-import BookingComplete from '../pages/client/booking/BookingComplete';
 import MovieBookingRecords from '../pages/client/movie_booking_record/MovieBookingRecords';
 import MemberPolicy from '../pages/client/member/MemberPolicy';
 import PrivacyPolicy from '../pages/client/member/PrivacyPolicy';
 import PaymentPolicy from '../pages/client/member/PaymentPolicy';
 import TheaterRules from '../pages/client/member/TheaterRules';
+import InforMovie from '../pages/client/page_infor_movie/InforMovie';
 
 function ClientRouters(props) {
     const router = [
         {
             path: "/",
             element: <HomePage />
+        },
+        {
+            path: "/movies/:id",
+            element: <InforMovie />
         },
         {
             path: "/booking",
@@ -62,10 +66,6 @@ function ClientRouters(props) {
         {
             path: "/checkout",
             element: <CheckoutPage />
-        },
-        {
-            path: "/bookingcompleted",
-            element: <BookingComplete />
         },
         {
             path: '/members',

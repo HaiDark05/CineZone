@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { useNotification } from '../../../context/NotificationContext';
 import { ContextAccounts } from '../../../context/AccountsProvider';
 import axios from 'axios';
-import { FormControl, InputLabel, Select, MenuItem, FormHelperText, Grid } from '@mui/material';
+import { FormControl, InputLabel, Select, MenuItem, Grid } from '@mui/material';
 import {
     Dialog,
     DialogTitle,
@@ -112,35 +112,6 @@ function ModalCustomerAccount({ open, handleClose, account, setAccount, validati
                     <Grid container spacing={2}>
                         <Grid item xs={12} sm={6}>
                             <TextField
-                                label="Phone"
-                                name="phone"
-                                value={account?.phone}
-                                onChange={handleChange}
-                                variant="outlined"
-                                fullWidth
-                                error={!!errors.phone}
-                                helperText={errors.phone}
-                            />
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <FormControl fullWidth error={!!errors.gender}>
-                                <InputLabel>Select Gender</InputLabel>
-                                <Select
-                                    name="gender"
-                                    value={account?.gender || ""}
-                                    onChange={handleChange}
-                                    label="Select Gender"
-                                >
-                                    <MenuItem value="male">Male</MenuItem>
-                                    <MenuItem value="female">Female</MenuItem>
-                                </Select>
-                                <FormHelperText>{errors.gender}</FormHelperText>
-                            </FormControl>
-                        </Grid>
-                    </Grid>
-                    <Grid container spacing={2}>
-                        <Grid item xs={12} sm={6}>
-                            <TextField
                                 label="Password"
                                 name="pass_word"
                                 value={account?.pass_word}
@@ -152,7 +123,7 @@ function ModalCustomerAccount({ open, handleClose, account, setAccount, validati
                             />
                         </Grid>
                         <Grid item xs={12} sm={6}>
-                            <FormControl fullWidth error={!!errors.id_role}>
+                            <FormControl fullWidth>
                                 <InputLabel id="role-label">Select Role</InputLabel>
                                 <Select
                                     labelId="role-label"

@@ -2,26 +2,20 @@ import { Card, CardContent, FormControl, InputLabel, MenuItem, Select } from '@m
 import React, { useContext, useEffect, useState } from 'react';
 import { COLORS } from '../../../utils/Containts';
 import { ContextBookings } from '../../../context/BookingsProvider';
-import { Cell, Legend, Pie, PieChart, ResponsiveContainer, Tooltip } from 'recharts';
+import { Bar, BarChart, Cell, Legend, ResponsiveContainer, XAxis, YAxis, Tooltip } from 'recharts';
 
 const CustomTooltip = ({ active, payload }) => {
-    if (active && payload && payload.length > 0) {
-        const { name, value } = payload[0]; // ✅ name = title, value = total
+    if (active && payload && payload.length) {
+        const { title, total } = payload[0].payload; // Extracting the correct properties
         return (
-            <div style={{
-                backgroundColor: '#fff',
-                border: '1px solid #ccc',
-                padding: '10px',
-                borderRadius: '5px'
-            }}>
-                <p style={{ color: payload[0].color }}>{name}</p>
-                <p>Số lượng: {value.toLocaleString()} đ</p>
+            <div style={{ backgroundColor: '#fff', border: '1px solid #ccc', padding: '10px', borderRadius: '5px' }}>
+                <p style={{ color: payload[0].fill }}>{title}</p>
+                <p>Số lượng: {total}</p> {/* Updated to show subscriptionCount */}
             </div>
         );
     }
     return null;
 };
-
 // Custom Legend Component
 const CustomLegend = ({ payload }) => {
     return (
@@ -127,25 +121,17 @@ function PlanSubscriptionBarChart(props) {
                             </FormControl>
                         </div>
                         <ResponsiveContainer width="100%" height={400}>
-                            <PieChart>
-                                <Pie
-                                    data={data}
-                                    cx="50%"
-                                    cy="50%"
-                                    labelLine={false}
-                                    label={({ title, percent }) => `${title}: ${(percent * 100).toFixed(0)}%`}
-                                    outerRadius={150}
-                                    fill="#8884d8"
-                                    dataKey="total" // ✅ Sửa lại đúng key
-                                    nameKey="title" // ✅ hiển thị tên
-                                >
+                            <BarChart data={data}>
+                                <XAxis dataKey="title" />
+                                <YAxis />
+                                <Bar dataKey="total" fill="#8884d8">
                                     {data.map((entry, index) => (
                                         <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                                     ))}
-                                </Pie>
+                                </Bar>
                                 <Tooltip content={<CustomTooltip />} />
-                                <Legend content={<CustomLegend />} />
-                            </PieChart>
+                                <Legend content={<CustomLegend data={data} />} />
+                            </BarChart>
                         </ResponsiveContainer>
                     </CardContent>
                 </Card>

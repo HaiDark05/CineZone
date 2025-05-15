@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { avatarDefault } from '../../../utils/Containts';
+import { avatarDefault, ROLES } from '../../../utils/Containts';
 import BoxSearch from '../../../components/BoxSearch';
 import ModalCustomerAccount from './ModalCustomerAccount';
 import TableCustomerAccount from './TableCustomerAccount';
 
-const inner = { imgUrl: avatarDefault, user_name: "", email: "", id_role: "", pass_word: "" }
+const inner = { imgUrl: avatarDefault, user_name: "", email: "", id_role: ROLES.USER, pass_word: "" }
 function ManagerUser(props) {
     const [open, setOpen] = useState(false);
         const handleOpen = () => setOpen(true);
@@ -23,7 +23,6 @@ function ManagerUser(props) {
             newErrors.user_name = account.user_name ? "" : "Pleas enter user name";
             newErrors.email = account.email ? "" : "Pleas enter email";
             newErrors.pass_word = account.pass_word ? "" : "Pleas enter password";
-            newErrors.phone = account.phone ? "" : "Please select a phone";
             setErrors(newErrors);
             return Object.values(newErrors).every(e => e == "");
         }

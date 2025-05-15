@@ -4,6 +4,7 @@ import FooterClient from './FooterClient';
 import ClientRouters from '../../../routes/ClientRouters';
 import ModalLogin from '../ComponentClient/ModalLogin';
 import ModalSignUp from '../ComponentClient/ModalSignUp';
+import ChatBot from '../chat_bot/ChatBot';
 
 function ClientDashBoard(props) {
     const [open, setOpen] = useState(false);
@@ -31,6 +32,7 @@ function ClientDashBoard(props) {
             </div>
             <ModalLogin open={open} handleClose={handleClose} handleOpenSignUp={handleOpenSignUp} />
             <ModalSignUp openSignUp={openSignUp} handleCloseSignUp={handleCloseSignUp} handleOpen={handleOpen} />
+            <ChatBot/>
         </div>
     );
 }

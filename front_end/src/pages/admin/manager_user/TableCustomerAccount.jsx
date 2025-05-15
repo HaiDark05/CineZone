@@ -27,10 +27,10 @@ function TableCustomerAccount({ setOpen, setAccount, searchObject, account }) {
 
     // Lọc tất cả user KHÔNG phải là admin và có tên phù hợp với từ khóa tìm kiếm
     const filteredAccount = accounts
-    .filter((account) => account.id_role !== ROLES.ADMIN) // Bỏ admin
-    .filter((account) =>
-        account.user_name.toLowerCase().includes(searchObject.toLowerCase())
-    );
+        .filter((account) => account.id_role !== ROLES.ADMIN) // Bỏ admin
+        .filter((account) =>
+            account.user_name.toLowerCase().includes(searchObject.toLowerCase())
+        );
 
     // Xử lý các hàng hiển thị trong một trang
     const rowsToDisplay = filteredAccount?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
@@ -53,14 +53,12 @@ function TableCustomerAccount({ setOpen, setAccount, searchObject, account }) {
             <TableContainer component={Paper}>
                 <Table sx={{ minWidth: 650 }} aria-label="simple table">
                     <TableHead sx={{ backgroundColor: '#1F2937' }}>
-                        <TableRow sx={{ whiteSpace: 'nowrap'}}>
+                        <TableRow sx={{ whiteSpace: 'nowrap' }}>
                             <TableCell align="center" sx={{ color: 'white' }}>#</TableCell>
                             <TableCell align="center" sx={{ color: 'white' }}>ImgUrl</TableCell>
                             <TableCell align="center" sx={{ color: 'white' }}>User name</TableCell>
                             <TableCell align="center" sx={{ color: 'white' }}>Email</TableCell>
                             <TableCell align="center" sx={{ color: 'white' }}>Password</TableCell>
-                            <TableCell align="center" sx={{ color: 'white' }}>Phone</TableCell>
-                            <TableCell align="center" sx={{ color: 'white' }}>Gender</TableCell>
                             <TableCell align="center" sx={{ color: 'white' }}>Role</TableCell>
                             <TableCell align="center" sx={{ color: 'white' }}>Action</TableCell>
                         </TableRow>
@@ -90,30 +88,33 @@ function TableCustomerAccount({ setOpen, setAccount, searchObject, account }) {
                                     {row.email}
                                 </TableCell>
                                 <TableCell align="center">
-                                    <TextField
-                                        sx={{ width: '200px' }}
-                                        type={'password'}
-                                        value={'•'.repeat(row.pass_word.length)}
-                                        size="small"
-                                        variant="outlined"
-                                        InputProps={{
-                                            readOnly: true,
-                                            endAdornment: (
-                                                <InputAdornment position="center">
-                                                    <IconButton edge="end">
-                                                        <MdVisibilityOff />
-                                                    </IconButton>
-                                                </InputAdornment>
-                                            ),
-                                        }}
-                                    />
+                                    {
+                                        row.pass_word ? (
+                                            <TextField
+                                                sx={{ width: '200px' }}
+                                                type={'password'}
+                                                value={'•'.repeat(row.pass_word.length)}
+                                                size="small"
+                                                variant="outlined"
+                                                InputProps={{
+                                                    readOnly: true,
+                                                    endAdornment: (
+                                                        <InputAdornment position="center">
+                                                            <IconButton edge="end">
+                                                                <MdVisibilityOff />
+                                                            </IconButton>
+                                                        </InputAdornment>
+                                                    ),
+                                                }}
+                                            />
+                                        ) : (
+                                            <div className="text-2xl font-bold bg-gradient-to-r from-[#121FCF] to-[#CF1512] bg-clip-text text-transparent">
+                                                <h1>Sign in with Google</h1>
+                                            </div>
+                                        )
+                                    }
                                 </TableCell>
-                                <TableCell align="center">
-                                    {row.phone}
-                                </TableCell>
-                                <TableCell align="center">
-                                    {row.gender}
-                                </TableCell>
+
                                 <TableCell align="center">
                                     {row.id_role}
                                 </TableCell>
@@ -145,7 +146,7 @@ function TableCustomerAccount({ setOpen, setAccount, searchObject, account }) {
                     </TableBody>
                     <TablePagination
                         rowsPerPageOptions={[5, 10, 15]}
-                        count={accounts.length}
+                        count={filteredAccount.length}
                         rowsPerPage={rowsPerPage}
                         page={page}
                         onPageChange={handleChangePage}

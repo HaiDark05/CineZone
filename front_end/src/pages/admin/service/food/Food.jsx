@@ -24,7 +24,7 @@ function Food(props) {
         newErrors.price = food.price ? "" : "Please enter price";
         newErrors.discount = food.discount ? "" : "Please enter discount";
         newErrors.id_cinema = food.id_cinema ? "" : "Please enter cinema";
-        newErrors.imgUrl = (food.imgUrl && food.imgUrl !== logos) ? "" : "Please enter img type chair";
+        newErrors.imgUrl = (food.imgUrl && food.imgUrl !== logos) ? "" : "Please enter img food";
         setErrors(newErrors);
         return Object.values(newErrors).every(e => e == "");
     }

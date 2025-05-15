@@ -37,7 +37,7 @@ function ModalFood({ open, handleClose, food, setFood, validation, errors }) {
                 showNotification("Food added successfully!", "success");
             }
 
-            handleClose(); // Đóng modal
+            handleClose();
             setUpdate((prev) => !prev); // Cập nhật lại state để load lại dữ liệu
 
         } catch (error) {

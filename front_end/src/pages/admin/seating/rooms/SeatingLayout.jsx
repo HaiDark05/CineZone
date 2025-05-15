@@ -2,7 +2,6 @@ import { Grid, Paper, styled } from '@mui/material';
 import React, { useContext, useEffect, useState } from 'react';
 import { getOjectById } from '../../../../utils/FunctionConvert';
 import { ContextTypeChairs } from '../../../../context/TypeChairsProvider';
-import { chairDefault } from '../../../../utils/Containts';
 const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: '#fff',
     ...theme.typography.body2,
@@ -27,7 +26,7 @@ function SeatingLayout({ row }) {
     };
 
     const showImgChair = (rowd, col) => {
-        const result = row.list_chair.find(e => e.row == rowd & e.col == col);
+        const result = row.list_chair.find(e => e.row == rowd && e.col == col);
 
         return result?.id_type_chair ? getOjectById(typeChairs, result?.id_type_chair)?.imgUrl : false;
     }

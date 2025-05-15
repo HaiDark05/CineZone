@@ -51,7 +51,7 @@ function TableMovieScreening({ setOpen, setMovieScreen, searchObject, movieScree
             <TableContainer component={Paper}>
                 <Table sx={{ minWidth: 650 }} aria-label="simple table">
                     <TableHead sx={{ backgroundColor: '#1F2937' }}>
-                        <TableRow sx={{ whiteSpace: 'nowrap'}}>
+                        <TableRow sx={{ whiteSpace: 'nowrap' }}>
                             <TableCell align="center" sx={{ color: 'white' }}>#</TableCell>
                             <TableCell align="center" sx={{ color: 'white' }}>Movie Name</TableCell>
                             <TableCell align="center" sx={{ color: 'white' }}>Room</TableCell>
@@ -71,7 +71,7 @@ function TableMovieScreening({ setOpen, setMovieScreen, searchObject, movieScree
                                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                             >
                                 <TableCell component="th" scope="row" align="center">
-                                    {index + 1}
+                                    {index + 1 + page * rowsPerPage}
                                 </TableCell>
                                 <TableCell align="center" style={{ fontWeight: "bold" }}>
                                     {getOjectById(movies, row.id_movie)?.name}
@@ -103,9 +103,9 @@ function TableMovieScreening({ setOpen, setMovieScreen, searchObject, movieScree
                                     align="center"
                                     className="relative"
                                 >
-                                    <Tooltip title={row.showtime?.map((element,index) => row.showtime.length == index + 1 ? element : element + ", ")} arrow >
+                                    <Tooltip title={row.showtime?.map((element, index) => row.showtime.length == index + 1 ? element : element + ", ")} arrow >
                                         <Button variant="contained">
-                                        <IoIosTime />
+                                            <IoIosTime />
                                         </Button>
                                     </Tooltip>
                                 </TableCell>
@@ -114,29 +114,31 @@ function TableMovieScreening({ setOpen, setMovieScreen, searchObject, movieScree
                                     {row.ratio}
                                 </TableCell>
                                 <TableCell align="center">
-                                    <Button
-                                        onClick={() => { setOpen(true); setMovieScreen(row) }}
-                                        sx={{
-                                            backgroundColor: 'blue',
-                                            '&:hover': { backgroundColor: '#FFD700' }
-                                        }}
-                                        variant="contained"
-                                    >
-                                        <FaPencilAlt />
-                                    </Button>
-                                    <Button
-                                        onClick={() => {
-                                            setOpenDeleted(true); setMovieScreen(row);
-                                        }}
-                                        sx={{
-                                            marginLeft: "10px",
-                                            backgroundColor: 'red',
-                                            '&:hover': { backgroundColor: 'darkred' }
-                                        }}
-                                        variant="contained"
-                                    >
-                                        <FaTrash />
-                                    </Button>
+                                    <div className="flex items-center justify-center">
+                                        <Button
+                                            onClick={() => { setOpen(true); setMovieScreen(row) }}
+                                            sx={{
+                                                backgroundColor: 'blue',
+                                                '&:hover': { backgroundColor: '#FFD700' }
+                                            }}
+                                            variant="contained"
+                                        >
+                                            <FaPencilAlt />
+                                        </Button>
+                                        <Button
+                                            onClick={() => {
+                                                setOpenDeleted(true); setMovieScreen(row);
+                                            }}
+                                            sx={{
+                                                marginLeft: "10px",
+                                                backgroundColor: 'red',
+                                                '&:hover': { backgroundColor: 'darkred' }
+                                            }}
+                                            variant="contained"
+                                        >
+                                            <FaTrash />
+                                        </Button>
+                                    </div>
                                 </TableCell>
                             </TableRow>
                         ))}

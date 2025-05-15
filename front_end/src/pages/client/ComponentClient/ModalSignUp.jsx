@@ -13,7 +13,6 @@ import {
 import { IoMdLock } from "react-icons/io";
 import { IoIosPerson } from "react-icons/io";
 import { MdVisibility, MdVisibilityOff, MdClose } from "react-icons/md";
-import { FaGooglePlusG } from "react-icons/fa";
 import { IoIosMail } from "react-icons/io";
 import axios from 'axios';
 import { ContextAuth } from '../../../context/AuthProvider';
@@ -22,13 +21,14 @@ import { useNotification } from '../../../context/NotificationContext';
 import { ContextAccounts } from '../../../context/AccountsProvider';
 
 
-const inner = { id_role: ROLES.USER, imgUrl: avatarDefault, user_name: "", email: "", pass_word: "", re_pass_word: "", phone: "", gender: "" }
+const inner = { id_role: ROLES.USER, imgUrl: avatarDefault, user_name: "", email: "", pass_word: "", re_pass_word: "" }
 function ModalSignUp({ openSignUp, handleCloseSignUp, handleOpen }) {
     const [showPassword, setShowPassword] = useState(false);
     const showNotification = useNotification();
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-    const [account, setAccount] = useState(inner); 
-    const { isLogin, saveLocal } = useContext(ContextAuth);
+    const [account, setAccount] = useState(inner);
+    const [errors, setErrors] = useState(inner);
+    const { saveLocal } = useContext(ContextAuth);
     const { update, setUpdate } = useContext(ContextAccounts);
     const handleChange = (event) => {
         const { name, value } = event.target;
@@ -37,16 +37,34 @@ function ModalSignUp({ openSignUp, handleCloseSignUp, handleOpen }) {
             [name]: value,
         }));
     }
-    
-    const handleSubmit = async () => {
-        const {re_pass_word, ...newAccount } = account ;
-        const accountLogin =  await axios.post("http://localhost:8080/api/accounts", newAccount);
-        saveLocal("isLogin",accountLogin.data.account);
-        setUpdate(!update);
-        showNotification("Completed Sign Up", "success")
-        handleCloseSignUp();
+    const validation = () => {
+        const newErrors = {};
+        newErrors.user_name = account.user_name ? "" : "Please enter username";
+        newErrors.email = account.email ? "" : "Please enter email";
+        newErrors.pass_word = account.pass_word ? "" : "Please enter password";
+        newErrors.re_pass_word = account.re_pass_word ? "" : "Please confirm your password";
+        if (account.pass_word !== account.re_pass_word) {
+            newErrors.re_pass_word = "Passwords do not match";
+        }
+        setErrors(newErrors);
+        return Object.values(newErrors).every(e => e === "");
     }
-    
+
+    const handleSubmit = async () => {
+    if (!validation()) {
+            return;
+        }
+    const { re_pass_word, ...newAccount } = account;
+    try {
+        const accountLogin = await axios.post("http://localhost:8080/api/accounts", newAccount);
+        saveLocal("isLogin", accountLogin.data.account);
+        setUpdate(!update);
+        showNotification("Completed Sign Up", "success");
+        handleCloseSignUp();
+    } catch (error) {
+        showNotification("Sign Up failed", "error");
+    }
+}
     return (
         <div>
             <Dialog
@@ -56,19 +74,15 @@ function ModalSignUp({ openSignUp, handleCloseSignUp, handleOpen }) {
                 fullWidth
                 className="transition-opacity duration-300 ease-in-out"
             >
-                {/* Nút Đóng */}
                 <IconButton
                     sx={{ position: "absolute", top: 8, right: 8 }}
                     onClick={handleCloseSignUp}
                 >
                     <MdClose className="text-[20px]" />
                 </IconButton>
-
-                {/* Tiêu đề */}
                 <DialogTitle className="text-center text-2xl font-bold text-gray-800">
                     Create Account 🚀
                 </DialogTitle>
-
                 <DialogContent className="p-6 space-y-4">
                     <TextField
                         fullWidth
@@ -78,6 +92,9 @@ function ModalSignUp({ openSignUp, handleCloseSignUp, handleOpen }) {
                         placeholder="Enter your username"
                         onChange={handleChange}
                         margin="dense"
+                        value={account.user_name}
+                          error={!!errors.user_name}
+                        helperText={errors.user_name}
                         InputProps={{
                             startAdornment: (
                                 <InputAdornment position="start">
@@ -94,6 +111,9 @@ function ModalSignUp({ openSignUp, handleCloseSignUp, handleOpen }) {
                         name='email'
                         onChange={handleChange}
                         margin="dense"
+                        value={account.email}
+                        error={!!errors.email}
+                        helperText={errors.email}
                         InputProps={{
                             startAdornment: (
                                 <InputAdornment position="start">
@@ -111,6 +131,9 @@ function ModalSignUp({ openSignUp, handleCloseSignUp, handleOpen }) {
                         name='pass_word'
                         margin="dense"
                         onChange={handleChange}
+                        value={account.pass_word}
+                         error={!!errors.pass_word}
+                        helperText={errors.pass_word}
                         InputProps={{
                             startAdornment: (
                                 <InputAdornment position="start">
@@ -135,6 +158,9 @@ function ModalSignUp({ openSignUp, handleCloseSignUp, handleOpen }) {
                         name='re_pass_word'
                         onChange={handleChange}
                         margin="dense"
+                        value={account.re_pass_word}
+                        error={!!errors.re_pass_word}
+                        helperText={errors.re_pass_word}
                         InputProps={{
                             startAdornment: (
                                 <InputAdornment position="start">
@@ -150,7 +176,6 @@ function ModalSignUp({ openSignUp, handleCloseSignUp, handleOpen }) {
                             ),
                         }}
                     />
-                    {/* Nút Đăng Ký */}
                     <Button
                         fullWidth
                         variant="contained"
@@ -159,32 +184,11 @@ function ModalSignUp({ openSignUp, handleCloseSignUp, handleOpen }) {
                     >
                         Sign Up
                     </Button>
-
-                    {/* Hoặc */}
-                    <div className="relative flex items-center">
-                        <div className="flex-grow border-t border-gray-300"></div>
-                        <span className="mx-3 text-gray-500 text-sm">OR</span>
-                        <div className="flex-grow border-t border-gray-300"></div>
-                    </div>
-
-                    {/* Đăng ký với Google */}
-                    <Button
-                        fullWidth
-                        variant="outlined"
-                        className="flex items-center gap-2 justify-center border border-gray-300 py-2 rounded-lg hover:bg-gray-100 transition-all duration-300"
-                    >
-                        <FaGooglePlusG className="text-2xl" />
-                        Continue with Google
-                    </Button>
-
-                    {/* Chuyển sang Đăng Nhập */}
                     <Typography className="text-center text-gray-600 text-sm">
                         Already have an account?{" "}
                         <span onClick={handleOpen} className="text-blue-500 cursor-pointer hover:underline">Log in</span>
                     </Typography>
                 </DialogContent>
-
-                {/* Điều khoản */}
                 <DialogActions className="justify-center pb-5 mb-4">
                     <Typography className="text-gray-500 text-xs">
                         By signing up, you agree to our{" "}

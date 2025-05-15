@@ -42,7 +42,7 @@ export const deleteImageFromCloudinary = async (publicId) => {
       body: formData,
     });
     const result = await response.json();
-    return result; // Returns the result of the deletion operation
+    return result;
   } catch (error) {
     console.error('Delete failed:', error);
     throw error;

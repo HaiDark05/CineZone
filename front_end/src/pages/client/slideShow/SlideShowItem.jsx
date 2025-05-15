@@ -9,6 +9,7 @@ import { CiHeart } from "react-icons/ci";
 import { IoIosInformationCircleOutline } from 'react-icons/io';
 import { FaTicket } from 'react-icons/fa6';
 import { ContextMovies } from '../../../context/MovieProvider';
+import { Link } from 'react-router-dom';
 function SlideShowItem(props) {
   const icons = [FaTicket, FaRegBookmark, CiHeart, IoIosInformationCircleOutline];
   const { movies } = useContext(ContextMovies);
@@ -39,14 +40,24 @@ function SlideShowItem(props) {
               />
               <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-black bg-opacity-60 opacity-0 transition-opacity duration-300 ease-in-out group-hover:opacity-100">
                 <div className="flex gap-3">
-                  {icons.map((Icon, idx) => (
-                    <div
-                      key={idx}
-                      className="p-3 rounded-full border-2 border-white text-white hover:bg-white hover:text-black transition-all duration-300"
-                    >
-                      <Icon />
-                    </div>
-                  ))}
+                  {icons.map((Icon, idx) =>
+                    Icon === IoIosInformationCircleOutline ? (
+                      <Link
+                        to={`/movies/${movie.id}`}
+                        key={idx}
+                        className="p-3 rounded-full border-2 border-white text-white hover:bg-white hover:text-black transition-all duration-300"
+                      >
+                        <Icon />
+                      </Link>
+                    ) : (
+                      <div
+                        key={idx}
+                        className="p-3 rounded-full border-2 border-white text-white hover:bg-white hover:text-black transition-all duration-300"
+                      >
+                        <Icon />
+                      </div>
+                    )
+                  )}
                 </div>
                 <span className="text-white text-lg font-semibold text-center">
                   {movie.name}

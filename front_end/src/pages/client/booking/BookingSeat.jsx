@@ -3,7 +3,6 @@ import React, { useContext, useEffect, useState } from 'react';
 import { ContextTypeChairs } from '../../../context/TypeChairsProvider';
 import { getOjectById } from '../../../utils/FunctionConvert';
 import seatSelect from '../../../assets/seat-selected.png'
-import { ContextMovieScreens } from '../../../context/MovieScreenProvider';
 import { ContextRooms } from '../../../context/RoomsProvider';
 import { ContextBooking } from '../../../context/BookingContext';
 import { ChairA, chairDefault } from '../../../utils/Containts';
@@ -39,7 +38,7 @@ function BookingSeat({ row, screen, setRoom }) {
     };
 
     const showImgChair = (rowd, col) => {
-        const result = row.list_chair.find(e => e.row == rowd & e.col == col);
+        const result = row.list_chair.find(e => e.row == rowd && e.col == col);
 
         return result?.id_type_chair ? getOjectById(typeChairs, result?.id_type_chair)?.imgUrl : false;
     }
@@ -49,8 +48,8 @@ function BookingSeat({ row, screen, setRoom }) {
         if(checkBooking(rowd, col)) {
              return chairDefault;
         }else {       
-            const result = row.list_chair.find(e => e.row == rowd & e.col == col);
-            const resultboking = booking.list_chair.find(e => e.row == rowd & e.col == col);
+            const result = row.list_chair.find(e => e.row == rowd && e.col == col);
+            const resultboking = booking.list_chair.find(e => e.row == rowd && e.col == col);
             return result?.id_type_chair && resultboking ? seatSelect : getOjectById(typeChairs, result?.id_type_chair)?.imgUrl;
         }
 
@@ -72,21 +71,20 @@ function BookingSeat({ row, screen, setRoom }) {
         }
         setBooking(pre => {
             let updatedList;
-            const result = row.list_chair.find(e => e.row == rowIndex & e.col == colIndex);
+            const result = row.list_chair.find(e => e.row == rowIndex && e.col == colIndex);
             result.title = nameChair(rowIndex, colIndex);
             updatedList = toggleSelection(pre.list_chair, result);
             return { ...booking, list_chair: updatedList };
         })
     }
     const toggleSelection = (list, item) => {
-        const resultboking = booking.list_chair.find(e => e.row == item.row & e.col == item.col);
+        const resultboking = booking.list_chair.find(e => e.row == item.row && e.col == item.col);
         return resultboking ? list.filter(i => i !== item) : [...list, item];
     };
 
     const nameChair = (rowIndex, colIndex) => {
         return ChairA[rowIndex] + colIndex;
     }
-  console.log(bookings);
   
     const checkBooking = (row,col) => {
         

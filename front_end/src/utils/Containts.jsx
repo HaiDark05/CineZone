@@ -11,7 +11,7 @@ import appleStore from "../assets/applestore.png"
 import androidStore from "../assets/androidstore.png"
 import avatarImg from "../assets/avatar/avatar_default.avif"
 
-export const logos = logo ;
+export const logos = logo;
 export const chairSelect = chairChoose;
 export const confirm = informed;
 export const appleStoreApp = appleStore;
@@ -124,71 +124,71 @@ export const menus = [
 export const menu_client = [
     {
         id: 1,
-        title : "Home",
-        path:"/"
+        title: "Home",
+        path: "/"
     },
     {
         id: 2,
-        title : "MovieScreening",
-        path:"/moviescreeningregion"
+        title: "MovieScreening",
+        path: "/moviescreeningregion"
     },
     {
         id: 3,
-        title : "Support",
-        path:"/supports"
+        title: "Support",
+        path: "/supports"
     },
     {
         id: 4,
-        title : "Contact",
-        path:"/contacts"
+        title: "Contact",
+        path: "/contacts"
     },
     {
         id: 5,
-        title : "Member",
-        path:"/members"
+        title: "Member",
+        path: "/members"
     }
 ];
 
 export const menuMember = [
     {
-      id: 1,
-      title: "MemberPolicy",
-      path: "/members/memberpolicy"
+        id: 1,
+        title: "MemberPolicy",
+        path: "/members/memberpolicy"
     },
     {
-      id: 2,
-      title: "PrivacyPolicy",
-      path: "/members/privacypolicy"
+        id: 2,
+        title: "PrivacyPolicy",
+        path: "/members/privacypolicy"
     },
     {
-      id: 3,
-      title: "PaymentPolicy",
-      path: "/members/paymentpolicy"
+        id: 3,
+        title: "PaymentPolicy",
+        path: "/members/paymentpolicy"
     },
     {
-      id: 4,
-      title: "TheaterRules",
-      path: "/members/threaterrules"
+        id: 4,
+        title: "TheaterRules",
+        path: "/members/threaterrules"
     }
-  ];
-  
+];
 
 
-export const ChairA = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 
+
+export const ChairA = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
     'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
-export const SECRET_KEY = "0775493859" ;
+export const SECRET_KEY = "0775493859";
 export const ROLES = {
     ADMIN: 'admin',        // Quản trị viên cấp cao
     USER: 'user',          // Người dùng thông thường
-  };
+};
 
 export const initialOptions = {
     "client-id": "AVC0OJzKvJYZHscCpkfaWJGTIe6FclH6Avpyc86pMjx12Iy9ykrQalJ4FORGU5F-89x0gbBCxuUP9sSM",
     currency: "USD",
     intent: "capture"
-  };
+};
 
-  export const COLORS = [
+export const COLORS = [
     '#0088FE', // Blue
     '#00C49F', // Teal
     '#FFBB28', // Yellow
@@ -201,5 +201,8 @@ export const initialOptions = {
     '#8A2BE2', // BlueViolet
     '#FF4500', // OrangeRed
     '#20B2AA'  // LightSeaGreen
-  ];
-  
+];
+
+export const YOUR_SERVICE_ID = "service_e05j4bd";
+export const YOUR_USER_ID = "Ofc0P_QZEwCOOxMGq";
+export const CONFIRM_CODE = "template_vxbtwic";

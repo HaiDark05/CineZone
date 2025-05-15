@@ -218,7 +218,6 @@ function ModalMovie({ open, handleClose, handleModalChoose, setMovie, movie, val
                                 </div>
 
                                 <div className="flex flex-col">
-                                    {/* Icon mở hộp thoại chọn file */}
                                     <label className="cursor-pointer">
                                         <FaImages className="text-indigo-600 text-[20px] mt-3" />
                                         <input
@@ -229,11 +228,10 @@ function ModalMovie({ open, handleClose, handleModalChoose, setMovie, movie, val
                                         />
                                     </label>
 
-                                    {/* Hiển thị ảnh */}
                                     <div className="flex justify-center my-2">
                                         <Box mt={2} display="flex" justifyContent="center">
                                             <img
-                                                src={movie.imgUrl ? movie.imgUrl : logos} // Ảnh mặc định nếu chưa chọn ảnh
+                                                src={movie.imgUrl ? movie.imgUrl : logos}
                                                 alt="Preview"
                                                 style={{ width: 100, height: 100, objectFit: "cover", borderRadius: 8 }}
                                             />

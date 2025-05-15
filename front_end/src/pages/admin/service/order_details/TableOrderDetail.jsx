@@ -7,7 +7,7 @@ import { ContextLocations } from '../../../../context/LocationProvider';
 import { ContextRegions } from '../../../../context/RegionsProvider';
 import { ContextMovies } from '../../../../context/MovieProvider';
 import { ContextAccounts } from '../../../../context/AccountsProvider';
-import { getOjectById } from '../../../../utils/FunctionConvert';
+import { formatFirebaseDateTime, getOjectById } from '../../../../utils/FunctionConvert';
 
 function TableOrderDetail({ searchObject }) {
     const { accounts } = useContext(ContextAccounts);
@@ -76,7 +76,7 @@ function TableOrderDetail({ searchObject }) {
                                     {getOjectById(movies, getOjectById(movieScreens, row?.id_screen)?.id_movie)?.name || "no"}
                                 </TableCell>
                                 <TableCell align="center">
-                                    {row?.booking_date}
+                                    {row?.booking_date && formatFirebaseDateTime(row.booking_date)}
                                 </TableCell>
                                 <TableCell align="center" sx={{ maxWidth: 150, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                                     <Tooltip arrow>

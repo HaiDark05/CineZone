@@ -1,9 +1,12 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import TableBookingRecords from './TableBookingRecords';
 import BoxSearchClient from '../../../components/BoxSearchRecord';
 
 function MovieBookingRecords(props) {
     const [searchObject, setSearchObject] = useState('');
+    useEffect(() => {
+        window.scrollTo(0, 0);
+      }, []);
     return (
         <>
             <div className="bg-[linear-gradient(-20deg,_#e9defa_0%,_#fbfcdb_100%)] p-2">

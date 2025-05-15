@@ -2,7 +2,7 @@ import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePag
 import React, { useContext, useState } from 'react';
 import { ContextBookings } from '../../../context/BookingsProvider';
 import { ContextBooking } from '../../../context/BookingContext';
-import { getOjectById } from '../../../utils/FunctionConvert';
+import { formatFirebaseDateTime, getOjectById } from '../../../utils/FunctionConvert';
 import axios from 'axios';
 import { ContextMovies } from '../../../context/MovieProvider';
 import { ContextMovieScreens } from '../../../context/MovieScreenProvider';
@@ -37,6 +37,7 @@ function TableBookingRecords({ searchObject }) {
     };
 
     const filteredBookings = bookings.filter((booking) => {
+        if (!isLogin?.id) return false;
         const movieName = getOjectById(movies, getOjectById(movieScreens, booking?.id_screen)?.id_movie)?.name || '';
 
         // Lọc theo tên phim và ID người dùng
@@ -46,7 +47,6 @@ function TableBookingRecords({ searchObject }) {
 
         return movieName.toLowerCase().includes(searchObject.toLowerCase()) && booking.id_account === isLogin.id;  // Thêm điều kiện lọc theo người dùng
     });
-
 
     // Xử lý các hàng hiển thị trong một trang
     const rowsToDisplay = filteredBookings?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
@@ -73,7 +73,6 @@ function TableBookingRecords({ searchObject }) {
                             <TableCell align='center' sx={{ color: 'white' }}>Total Chair</TableCell>
                             <TableCell align='center' sx={{ color: 'white' }}>Total Food</TableCell>
                             <TableCell align='center' sx={{ color: 'white' }}>Total Amount</TableCell>
-                            <TableCell align='center' sx={{ color: 'white' }}>Payment Status</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -86,10 +85,10 @@ function TableBookingRecords({ searchObject }) {
                                     {index + 1 + page * rowsPerPage}
                                 </TableCell>
                                 <TableCell align="center">
-                                    {getOjectById(movies, getOjectById(movieScreens, row?.id_screen)?.id_movie)?.name || "no"}
+                                    {getOjectById(movies, getOjectById(movieScreens, row?.id_screen)?.id_movie)?.name}
                                 </TableCell>
                                 <TableCell align="center">
-                                    {row?.booking_date}
+                                    {row?.booking_date && formatFirebaseDateTime(row.booking_date)}
                                 </TableCell>
                                 <TableCell align="center" sx={{ maxWidth: 150, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                                     <Tooltip arrow>
@@ -130,9 +129,6 @@ function TableBookingRecords({ searchObject }) {
                                 </TableCell>
                                 <TableCell align="center">
                                     {row?.total.toLocaleString('vi-VN')} <sup>đ</sup>
-                                </TableCell>
-                                <TableCell align="center">
-                                    Đã Thanh Toán
                                 </TableCell>
                             </TableRow>
                         ))}

@@ -184,7 +184,7 @@ function ModalMovieScreening({ open, handleClose, movieScreen, setMovieScreen, v
                                         onChange={handleTimeChange}
                                         fullWidth
                                         InputLabelProps={{
-                                            shrink: true, // Đảm bảo nhãn không che mất giá trị
+                                            shrink: true,
                                         }}
                                         InputProps={{
                                             endAdornment: (

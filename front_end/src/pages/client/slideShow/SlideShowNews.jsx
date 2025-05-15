@@ -12,10 +12,10 @@ import news5 from "../../../assets/imgNews/venom.jpg";
 
 function SlideShowNews(props) {
     const bannerNews = [
-            { id: 1, image: news1, title: "TẾT KHAI XUÂN – RỘN RÀNG MỞ BÁN VÉ PHIM TẾT TẠI RIO CINEMAS!", description: "Chào năm mới với loạt siêu phẩm điện ảnh cực đỉnh tại Rio Cinemas! Từ mùng 1 Tết, rạp đã sẵn sàng để mang đến những khoảnh khắc ngập tràn niềm vui và  ..." },
+            { id: 1, image: news1, title: "TẾT KHAI XUÂN – RỘN RÀNG MỞ BÁN VÉ PHIM TẾT TẠI CINEZONE!", description: "Chào năm mới với loạt siêu phẩm điện ảnh cực đỉnh tại CINEZONE! Từ mùng 1 Tết, rạp đã sẵn sàng để mang đến những khoảnh khắc ngập tràn niềm vui và  ..." },
             { id: 2, image: news2, title: "Kiều Minh Tuấn tăng 15 kg để đóng 'Cô dâu hào môn'", description: 'Diễn viên Kiều Minh Tuấn cho biết tăng 15 kg trong hơn một tháng để đóng vai người cha nghèo trong "Cô dâu hào môn".' },
             { id: 3, image: news3, title: "Robot Hoang Dã: Kiệt tác hoạt hình hay nhất 2024", description: "Tựa phim hoạt hình mới của nhà DreamWorks thừa sức trở thành ứng cử viên sáng giá nhất cho giải Oscar năm sau." },
-            { id: 4, image: news4, title: "THÔNG BÁO TIẾN HÀNH RESET ĐIỂM THEO THÔNG LỆ NĂM 2024", description: "RIO Cinemas xin thông báo sẽ tiến hành tự động reset thẻ thành viên vào ngày 31/12/2024" },
+            { id: 4, image: news4, title: "THÔNG BÁO TIẾN HÀNH RESET ĐIỂM THEO THÔNG LỆ NĂM 2024", description: "CINEZONE xin thông báo sẽ tiến hành tự động reset thẻ thành viên vào ngày 31/12/2024" },
             { id: 5, image: news5, title: "‘Venom: Kèo cuối’: Lần cuối Eddie và Venom sát cánh trên màn ảnh rộng?", description: "Liệu 'Venom: Kèo cuối' có phải màn chia ly đầy cảm xúc giữa Eddie và Venom sau nhiều năm bên nhau hay cả hai sẽ tử chiến tới giây phút cuối cùng?" },
         ];
     return (

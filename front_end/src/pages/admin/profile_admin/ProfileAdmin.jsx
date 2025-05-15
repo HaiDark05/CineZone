@@ -10,10 +10,8 @@ import {
     Box,
     Paper,
     Button,
-    MenuItem,
-    Select,
-    InputLabel,
-    FormControl
+    IconButton,
+    InputAdornment
 } from '@mui/material';
 import { ContextAuth } from '../../../context/AuthProvider';
 import { useNotification } from '../../../context/NotificationContext';
@@ -22,6 +20,7 @@ import { ContextAccounts } from '../../../context/AccountsProvider';
 import { avatarDefault } from '../../../utils/Containts';
 import { uploadImageToCloudinary } from '../../../config/cloudinaryConfig';
 import axios from 'axios';
+import { MdVisibility, MdVisibilityOff } from 'react-icons/md';
 
 function ProfileAdmin() {
     const { isLogin, updateUserProfile } = useContext(ContextAuth);
@@ -29,13 +28,16 @@ function ProfileAdmin() {
     const showNotification = useNotification();
     const { setUpdate } = useContext(ContextAccounts);
 
+    const [showPassword, setShowPassword] = useState(false);
+    const togglePasswordVisibility = () => {
+        setShowPassword((prev) => !prev);
+    };
+
     // Lưu thông tin chỉnh sửa
     const [editedAccount, setEditedAccount] = useState({
         imgUrl: isLogin?.imgUrl || '',
         user_name: isLogin?.user_name || '',
         email: isLogin?.email || '',
-        phone: isLogin?.phone || '',
-        gender: isLogin?.gender || '',
         pass_word: isLogin?.pass_word || '', // Password sẽ để trống mặc định
         id_role: isLogin?.id_role || 'admin'
     });
@@ -44,7 +46,7 @@ function ProfileAdmin() {
         try {
             // Nếu thay đổi ảnh, upload ảnh mới lên Cloudinary
             let imgLoading = editedAccount.imgUrl;
-    
+
             if (editedAccount.imgUrl && editedAccount.imgUrl !== isLogin?.imgUrl) {
                 imgLoading = await uploadImageToCloudinary(editedAccount.imgUrl, "admin");
                 if (!imgLoading) {
@@ -52,20 +54,20 @@ function ProfileAdmin() {
                     return;
                 }
             }
-    
+
             // Cập nhật object user mới với ảnh đã upload
             const updatedAccount = { ...editedAccount, imgUrl: imgLoading };
-    
+
             // Gửi request PUT lên server
             if (isLogin.id) {
                 await axios.put(`http://localhost:8080/api/accounts/${isLogin.id}`, updatedAccount);
-                
+
                 // Cập nhật lại context với ảnh mới
                 updateUserProfile({ imgUrl: imgLoading });
-    
+
                 showNotification("Profile Admin updated successfully!", "success");
             }
-    
+
             setIsEditing(false);
             setUpdate((prev) => !prev); // Cập nhật state để load lại dữ liệu
         } catch (error) {
@@ -73,10 +75,10 @@ function ProfileAdmin() {
             showNotification("Error submitting admin!", "error");
         }
     };
-    
-    
-    
-    
+
+
+
+
     const handleChange = (e) => {
         const { name, value } = e.target;
         setEditedAccount({
@@ -166,41 +168,26 @@ function ProfileAdmin() {
                                 </Grid>
                                 <Grid item xs={12} md={6}>
                                     <TextField
-                                        label="Phone"
-                                        name="phone"
-                                        value={editedAccount.phone}
-                                        onChange={handleChange}
-                                        fullWidth
-                                        variant="outlined"
-                                        InputProps={{ readOnly: !isEditing }}
-                                    />
-                                </Grid>
-                                <Grid item xs={12} md={6}>
-                                    <FormControl fullWidth variant="outlined" disabled={!isEditing}>
-                                        <InputLabel id="gender-label">Gender</InputLabel>
-                                        <Select
-                                            label="Gender"
-                                            name="gender"
-                                            value={editedAccount.gender}
-                                            onChange={handleChange}
-                                            labelId="gender-label"
-                                        >
-                                            <MenuItem value="male">Male</MenuItem>
-                                            <MenuItem value="female">Female</MenuItem>
-                                        </Select>
-                                    </FormControl>
-                                </Grid>
-                                <Grid item xs={12} md={6}>
-                                    <TextField
                                         label="Password"
                                         name="pass_word"
                                         value={editedAccount?.pass_word}
                                         onChange={handleChange}
                                         variant="outlined"
                                         fullWidth
+                                        type={showPassword ? 'text' : 'password'}
                                         InputProps={{
-                                            readOnly: !isEditing, // Chế độ chỉ đọc khi không chỉnh sửa
-                                            type: isEditing ? 'text' : 'password', // Mặc định là mật khẩu dấu sao, chỉnh sửa thì hiển thị mật khẩu thực
+                                            readOnly: !isEditing,
+                                            endAdornment: isEditing && (
+                                                <InputAdornment position="end">
+                                                    <IconButton
+                                                        onClick={togglePasswordVisibility}
+                                                        edge="end"
+                                                        size="small"
+                                                    >
+                                                        {showPassword ? <MdVisibilityOff /> : <MdVisibility />}
+                                                    </IconButton>
+                                                </InputAdornment>
+                                            )
                                         }}
                                     />
                                 </Grid>
@@ -212,7 +199,7 @@ function ProfileAdmin() {
                                         <Button
                                             variant="contained"
                                             color="primary"
-                                        onClick={handleSubmit}
+                                            onClick={handleSubmit}
                                         >
                                             Save
                                         </Button>
