@@ -18,7 +18,7 @@ const cookieParser = require("cookie-parser");
 
 const app = express();
 app.use(cors({
-  origin: "https://cinezone.onrender.com",
+  origin: "http://localhost:3000",
   credentials: true
 }));
 app.use(express.json());
